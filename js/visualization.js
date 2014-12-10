@@ -3,19 +3,19 @@ var Visualization = function () {
   this.height = $(document).height();
 
   this.nodes = [
-    { id: 0 },
-    { id: 1 },
-    { id: 2 },
-    { id: 3 }
+    { id: 0, x: this.width/2 - 100, y: this.height/2 - 100 },
+    { id: 1, x: this.width/2 - 100, y: this.height/2 + 100 },
+    { id: 2, x: this.width/2 + 100, y: this.height/2 - 100 },
+    { id: 3, x: this.width/2 + 100, y: this.height/2 + 100 }
   ];
 
   this.links = [
-    { source: this.nodes[0], target: this.nodes[1] },
-    { source: this.nodes[0], target: this.nodes[2] },
-    { source: this.nodes[0], target: this.nodes[3] },
-    { source: this.nodes[1], target: this.nodes[2] },
-    { source: this.nodes[1], target: this.nodes[3] },
-    { source: this.nodes[2], target: this.nodes[3] },
+    { source: this.nodes[0], target: this.nodes[1], hi: true, lo: true },
+    { source: this.nodes[0], target: this.nodes[2], hi: true, lo: true },
+    { source: this.nodes[0], target: this.nodes[3], hi: true, lo: true },
+    { source: this.nodes[1], target: this.nodes[2], hi: true, lo: true },
+    { source: this.nodes[1], target: this.nodes[3], hi: true, lo: true },
+    { source: this.nodes[2], target: this.nodes[3], hi: true, lo: true },
   ];
 };
 
@@ -38,7 +38,10 @@ Visualization.prototype.setup = function () {
 
   // Create the arrowhead path
   this.svg.append("svg:defs").selectAll("marker")
-    .data([{id: "start", refX: -12}, {id: "end", refX: 22}])
+    .data([
+      {id: "start", refX: -12, path: "M10,-5L0,0L10,5"},
+      {id: "end", refX: 22, path: "M0,-5L10,0L0,5"}
+    ])
   .enter().append("svg:marker")
     .attr("id", function (d) { return d.id; })
     .attr("viewBox", "0 -5 10 10")
@@ -48,7 +51,7 @@ Visualization.prototype.setup = function () {
     .attr("markerHeight", 6)
     .attr("orient", "auto")
   .append("svg:path")
-    .attr("d", "M0,-5L10,0L0,5");
+    .attr("d", function (d) { return d.path; });
 
   this.force.on('tick', this.tick.bind(this));
 
@@ -66,8 +69,8 @@ Visualization.prototype.start = function () {
     .data(this.links, function(d) { return d.source.id + "-" + d.target.id; });
   this.link.enter().append('line')
     .attr('class', 'link')
-    .attr("marker-start", "url(#start)")
-    .attr("marker-end", "url(#end)");
+    .attr("marker-start", function (d) { return d.lo ? "url(#start)" : null; })
+    .attr("marker-end", function (d) { return d.hi ? "url(#end)" : null; });
   this.link.exit().remove();
 
   this.force.start();
@@ -91,7 +94,7 @@ Visualization.prototype.addNode = function () {
   this.nodes.push(newNode);
   this.nodes.forEach(function (node) {
     if (id !== node.id) {
-      _this.links.push({source: newNode, target: node});
+      _this.links.push({source: newNode, target: node, hi: true});
     }
   });
   this.start();
