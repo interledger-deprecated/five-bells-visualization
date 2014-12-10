@@ -9,6 +9,8 @@ var State = function (initialState) {
   this.timers = [];
 };
 
+State.prototype = _.clone(EventEmitter.prototype);
+
 State.prototype.prev = function(time) {
   return util.greatestLower(this.checkpoints,
                             function(m) { return m.time > time; });

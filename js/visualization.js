@@ -3,6 +3,8 @@ var Visualization = function (state) {
   this.height = $(document).height();
 
   this.state = state;
+
+  state.on('change', this.start.bind(this));
 };
 
 Visualization.prototype.setup = function () {
@@ -65,23 +67,11 @@ Visualization.prototype.start = function () {
 Visualization.prototype.tick = function () {
   this.node.attr('r', 15)
       .attr('cx', function(d) { return d.x; })
-      .attr('cy', function(d) { return d.y; });
+      .attr('cy', function(d) { return d.y; })
+      .style('fill', function (d) { return d.color; });
 
   this.link.attr('x1', function(d) { return d.source.x; })
       .attr('y1', function(d) { return d.source.y; })
       .attr('x2', function(d) { return d.target.x; })
       .attr('y2', function(d) { return d.target.y; });
-};
-
-Visualization.prototype.addNode = function () {
-  var _this = this;
-  var id = this.nodes.length;
-  var newNode = {id: id};
-  this.state.current.nodes.push(newNode);
-  this.state.current.nodes.forEach(function (node) {
-    if (id !== node.id) {
-      _this.state.current.links.push({source: newNode, target: node, hi: true});
-    }
-  });
-  this.start();
 };

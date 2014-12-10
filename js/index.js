@@ -3,10 +3,10 @@ jQuery(function ($) {
   var height = $(document).height();
 
   var initialNodes = [
-    { id: 0, x: width/2 - 100, y: height/2 - 100 },
-    { id: 1, x: width/2 - 100, y: height/2 + 100 },
-    { id: 2, x: width/2 + 100, y: height/2 - 100 },
-    { id: 3, x: width/2 + 100, y: height/2 + 100 }
+    { id: 0, x: width/2 - 100, y: height/2 - 100, quorum: 3 },
+    { id: 1, x: width/2 - 100, y: height/2 + 100, quorum: 3 },
+    { id: 2, x: width/2 + 100, y: height/2 - 100, quorum: 3 },
+    { id: 3, x: width/2 + 100, y: height/2 + 100, quorum: 3 }
   ];
 
   var initialLinks = [
@@ -24,8 +24,12 @@ jQuery(function ($) {
     messages: []
   });
 
+  // We need to create the analyzer before the visualization, so that things
+  // update in the correct order.
+  var analyzer = window.analyzer = new Analyzer(state);
+
   var viz = window.viz = new Visualization(state);
   viz.setup();
 
-  var ui = window.ui = new UI(viz);
+  var ui = window.ui = new UI(state);
 });
