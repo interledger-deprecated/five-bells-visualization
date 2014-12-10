@@ -4,19 +4,15 @@ jQuery(function ($) {
 
   var initialNodes = [
     { id: 0, x: width/2 - 100, y: height/2 - 100, quorum: 3 },
-    { id: 1, x: width/2 - 100, y: height/2 + 100, quorum: 3 },
-    { id: 2, x: width/2 + 100, y: height/2 - 100, quorum: 3 },
+    { id: 1, x: width/2 + 100, y: height/2 - 100, quorum: 3 },
+    { id: 2, x: width/2 - 100, y: height/2 + 100, quorum: 3 },
     { id: 3, x: width/2 + 100, y: height/2 + 100, quorum: 3 }
   ];
 
-  var initialLinks = [
-    { source: initialNodes[0], target: initialNodes[1], hi: true, lo: true },
-    { source: initialNodes[0], target: initialNodes[2], hi: true, lo: true },
-    { source: initialNodes[0], target: initialNodes[3], hi: true, lo: true },
-    { source: initialNodes[1], target: initialNodes[2], hi: true, lo: true },
-    { source: initialNodes[1], target: initialNodes[3], hi: true, lo: true },
-    { source: initialNodes[2], target: initialNodes[3], hi: true, lo: true },
-  ];
+  util.interconnectFully(initialNodes);
+
+  var initialLinks = util.generateLinks(initialNodes);
+  console.log(initialLinks);
 
   var state = window.state = new State({
     nodes: initialNodes,

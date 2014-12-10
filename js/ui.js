@@ -9,11 +9,10 @@ var UI = function (state, viz) {
 
 UI.prototype.addNode = function () {
   var _this = this;
-  var id = this.state.current.nodes.length;
-  var newNode = {id: id};
+  var newNode = {id: this.state.current.nodes.length};
   this.state.current.nodes.push(newNode);
   this.state.current.nodes.forEach(function (node) {
-    if (id !== node.id) {
+    if (newNode !== node) {
       _this.state.current.links.push({source: newNode, target: node, hi: true});
     }
   });
@@ -22,8 +21,13 @@ UI.prototype.addNode = function () {
 
 UI.prototype.addDisconnectedNode = function () {
   var _this = this;
-  var id = this.state.current.nodes.length;
-  var newNode = {id: id};
+  var newNode = {id: this.state.current.nodes.length};
   this.state.current.nodes.push(newNode);
   this.state.emit('change');
+};
+
+UI.prototype.addTrust = function () {
+  this.viz.once('nodeClick', function (node) {
+    var firstNode = node;
+  })
 };
