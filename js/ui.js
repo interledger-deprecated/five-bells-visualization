@@ -1,5 +1,6 @@
-var UI = function (state) {
+var UI = function (state, viz) {
   this.state = state;
+  this.viz = viz;
 
   var gui = new dat.GUI();
   gui.add(this, 'addNode');

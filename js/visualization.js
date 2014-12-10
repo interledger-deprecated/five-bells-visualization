@@ -17,6 +17,9 @@ Visualization.prototype.setup = function () {
       .nodes(this.state.current.nodes)
       .links(this.state.current.links);
 
+  this.drag = this.force.drag()
+    .on('dragstart', Visualization.handleNodeDragStart);
+
   this.force.linkDistance(150);
 
   // Create the SVG groups
@@ -50,7 +53,9 @@ Visualization.prototype.start = function () {
   this.node = this.nodeGroup.selectAll('.node')
     .data(this.state.current.nodes, function(d) { return d.id;});
   this.node.enter().append('circle')
-    .attr('class', 'node');
+    .attr('class', 'node')
+    .on('dblclick', Visualization.handleNodeDblClick)
+    .call(this.drag);
   this.node.exit().remove();
 
   this.link = this.linkGroup.selectAll(".link")
@@ -74,4 +79,11 @@ Visualization.prototype.tick = function () {
       .attr('y1', function(d) { return d.source.y; })
       .attr('x2', function(d) { return d.target.x; })
       .attr('y2', function(d) { return d.target.y; });
+};
+
+Visualization.handleNodeDragStart = function (d) {
+  d3.select(this).classed("fixed", d.fixed = true);
+};
+Visualization.handleNodeDblClick = function (d) {
+  d3.select(this).classed("fixed", d.fixed = false);
 };

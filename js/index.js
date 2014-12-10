@@ -31,5 +31,5 @@ jQuery(function ($) {
   var viz = window.viz = new Visualization(state);
   viz.setup();
 
-  var ui = window.ui = new UI(state);
+  var ui = window.ui = new UI(state, viz);
 });

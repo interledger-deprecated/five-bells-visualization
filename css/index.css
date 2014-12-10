@@ -14,3 +14,8 @@ html, body {
   stroke: #777;
   stroke-width: 2px;
 }
+
+.node.fixed {
+  stroke: #333;
+  stroke-width: 2px;
+}
