@@ -1,22 +1,8 @@
-var Visualization = function () {
+var Visualization = function (state) {
   this.width = $(document).width();
   this.height = $(document).height();
 
-  this.nodes = [
-    { id: 0, x: this.width/2 - 100, y: this.height/2 - 100 },
-    { id: 1, x: this.width/2 - 100, y: this.height/2 + 100 },
-    { id: 2, x: this.width/2 + 100, y: this.height/2 - 100 },
-    { id: 3, x: this.width/2 + 100, y: this.height/2 + 100 }
-  ];
-
-  this.links = [
-    { source: this.nodes[0], target: this.nodes[1], hi: true, lo: true },
-    { source: this.nodes[0], target: this.nodes[2], hi: true, lo: true },
-    { source: this.nodes[0], target: this.nodes[3], hi: true, lo: true },
-    { source: this.nodes[1], target: this.nodes[2], hi: true, lo: true },
-    { source: this.nodes[1], target: this.nodes[3], hi: true, lo: true },
-    { source: this.nodes[2], target: this.nodes[3], hi: true, lo: true },
-  ];
+  this.state = state;
 };
 
 Visualization.prototype.setup = function () {
@@ -26,8 +12,8 @@ Visualization.prototype.setup = function () {
 
   this.force = d3.layout.force()
       .size([this.width, this.height])
-      .nodes(this.nodes)
-      .links(this.links);
+      .nodes(this.state.current.nodes)
+      .links(this.state.current.links);
 
   this.force.linkDistance(150);
 
@@ -60,13 +46,13 @@ Visualization.prototype.setup = function () {
 
 Visualization.prototype.start = function () {
   this.node = this.nodeGroup.selectAll('.node')
-    .data(this.nodes, function(d) { return d.id;});
+    .data(this.state.current.nodes, function(d) { return d.id;});
   this.node.enter().append('circle')
     .attr('class', 'node');
   this.node.exit().remove();
 
   this.link = this.linkGroup.selectAll(".link")
-    .data(this.links, function(d) { return d.source.id + "-" + d.target.id; });
+    .data(this.state.current.links, function(d) { return d.source.id + "-" + d.target.id; });
   this.link.enter().append('line')
     .attr('class', 'link')
     .attr("marker-start", function (d) { return d.lo ? "url(#start)" : null; })
@@ -91,10 +77,10 @@ Visualization.prototype.addNode = function () {
   var _this = this;
   var id = this.nodes.length;
   var newNode = {id: id};
-  this.nodes.push(newNode);
-  this.nodes.forEach(function (node) {
+  this.state.current.nodes.push(newNode);
+  this.state.current.nodes.forEach(function (node) {
     if (id !== node.id) {
-      _this.links.push({source: newNode, target: node, hi: true});
+      _this.state.current.links.push({source: newNode, target: node, hi: true});
     }
   });
   this.start();
