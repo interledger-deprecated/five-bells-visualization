@@ -58,6 +58,7 @@ Visualization.prototype.start = function () {
     .attr('class', 'node')
     .on('click', this.handleNodeClick.bind(this))
     .on('dblclick', Visualization.handleNodeDblClick)
+    .classed("fixed", function(d) { return d.fixed; })
     .call(this.drag);
   this.node.exit().remove();
 

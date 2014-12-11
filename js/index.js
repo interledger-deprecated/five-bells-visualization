@@ -3,10 +3,10 @@ jQuery(function ($) {
   var height = $(document).height();
 
   var initialNodes = [
-    { id: 0, x: width/2 - 100, y: height/2 - 100, quorum: 3 },
-    { id: 1, x: width/2 + 100, y: height/2 - 100, quorum: 3 },
-    { id: 2, x: width/2 - 100, y: height/2 + 100, quorum: 3 },
-    { id: 3, x: width/2 + 100, y: height/2 + 100, quorum: 3 }
+    { id: 0, x: width/2 - 61.1, y: height/2 - 61.1, quorum: 3, fixed: true },
+    { id: 1, x: width/2 + 61.1, y: height/2 - 61.1, quorum: 3, fixed: true },
+    { id: 2, x: width/2 - 61.1, y: height/2 + 61.1, quorum: 3, fixed: true },
+    { id: 3, x: width/2 + 61.1, y: height/2 + 61.1, quorum: 3, fixed: true }
   ];
 
   util.interconnectFully(initialNodes);
