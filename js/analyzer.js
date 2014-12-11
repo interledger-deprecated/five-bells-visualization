@@ -27,6 +27,9 @@ Analyzer.prototype.update = function () {
     });
   });
   var scc = Graph.stronglyConnectedComponents(adjList);
+  scc.components.sort(function (a, b) {
+    return a[a.length-1] - b[b.length-1];
+  });
   scc.components.forEach(function (component, i) {
     component.forEach(function (nodeId) {
       var node = this.state.current.nodes[nodeId];
