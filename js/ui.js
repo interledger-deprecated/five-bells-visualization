@@ -6,6 +6,7 @@ var UI = function (state, viz) {
   gui.add(this, 'addNode');
   gui.add(this, 'addDisconnectedNode');
   gui.add(this, 'addTrust');
+  gui.add(this, 'deleteNode');
 };
 
 UI.prototype.addNode = function () {
@@ -27,7 +28,10 @@ UI.prototype.addDisconnectedNode = function () {
 
 UI.prototype.addTrust = function () {
   var _this = this;
-  // TODO Unregister any existing nodeClick handlers
+
+  // Unregister any existing nodeClick handlers
+  this.viz.removeListener('nodeClick');
+
   this.viz.once('nodeClick', function (node) {
     var firstNode = node;
 
@@ -46,4 +50,24 @@ UI.prototype.addTrust = function () {
       this.state.emit('change');
     })
   })
+};
+
+UI.prototype.deleteNode = function () {
+  var _this = this;
+
+  // Unregister any existing nodeClick handlers
+  this.viz.removeListener('nodeClick');
+
+  this.viz.once('nodeClick', function (removedNode) {
+    var nodeId = _this.state.current.nodes.indexOf(removedNode);
+    _this.state.current.nodes.splice(nodeId, 1);
+    _this.state.current.nodes.forEach(function (node) {
+      if (!Array.isArray(node.advisors)) return;
+
+      node.advisors.filter(function (advisor) {
+        return advisor !== removedNode;
+      });
+    });
+    this.state.emit('change');
+  });
 };
