@@ -11,12 +11,8 @@ jQuery(function ($) {
 
   util.interconnectFully(initialNodes);
 
-  var initialLinks = util.generateLinks(initialNodes);
-  console.log(initialLinks);
-
   var state = window.state = new State({
     nodes: initialNodes,
-    links: initialLinks,
     messages: []
   });
 

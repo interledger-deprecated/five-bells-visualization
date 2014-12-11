@@ -7,6 +7,8 @@ var Visualization = function (state) {
   state.on('change', this.start.bind(this));
 };
 
+Visualization.prototype = _.clone(EventEmitter.prototype);
+
 Visualization.prototype.setup = function () {
   this.svg = d3.select('body').append('svg')
       .attr('width', this.width)
@@ -15,7 +17,7 @@ Visualization.prototype.setup = function () {
   this.force = d3.layout.force()
       .size([this.width, this.height])
       .nodes(this.state.current.nodes)
-      .links(this.state.current.links);
+      .links(util.generateLinks(this.state.current.nodes));
 
   this.drag = this.force.drag()
     .on('dragstart', Visualization.handleNodeDragStart);
@@ -54,16 +56,16 @@ Visualization.prototype.start = function () {
     .data(this.state.current.nodes, function(d) { return d.id;});
   this.node.enter().append('circle')
     .attr('class', 'node')
+    .on('click', this.handleNodeClick.bind(this))
     .on('dblclick', Visualization.handleNodeDblClick)
     .call(this.drag);
   this.node.exit().remove();
 
+  var links = util.generateLinks(this.state.current.nodes);
   this.link = this.linkGroup.selectAll(".link")
-    .data(this.state.current.links, function(d) { return d.source.id + "-" + d.target.id; });
+    .data(links, function(d) { return d.source.id + "-" + d.target.id; });
   this.link.enter().append('line')
-    .attr('class', 'link')
-    .attr("marker-start", function (d) { return d.lo ? "url(#start)" : null; })
-    .attr("marker-end", function (d) { return d.hi ? "url(#end)" : null; });
+    .attr('class', 'link');
   this.link.exit().remove();
 
   this.force.start();
@@ -78,12 +80,17 @@ Visualization.prototype.tick = function () {
   this.link.attr('x1', function(d) { return d.source.x; })
       .attr('y1', function(d) { return d.source.y; })
       .attr('x2', function(d) { return d.target.x; })
-      .attr('y2', function(d) { return d.target.y; });
+      .attr('y2', function(d) { return d.target.y; })
+      .attr("marker-start", function (d) { return d.lo ? "url(#start)" : null; })
+      .attr("marker-end", function (d) { return d.hi ? "url(#end)" : null; });
 };
 
-Visualization.handleNodeDragStart = function (d) {
-  d3.select(this).classed("fixed", d.fixed = true);
+Visualization.prototype.handleNodeClick = function (d) {
+  this.emit('nodeClick', d);
 };
 Visualization.handleNodeDblClick = function (d) {
   d3.select(this).classed("fixed", d.fixed = false);
+};
+Visualization.handleNodeDragStart = function (d) {
+  d3.select(this).classed("fixed", d.fixed = true);
 };

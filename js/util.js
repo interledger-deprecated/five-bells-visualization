@@ -64,8 +64,9 @@ util.generateLinks = function (nodes) {
         source: nodes[i],
         target: nodes[j]
       };
-      link.hi = !!~nodes[i].advisors.indexOf(nodes[j]);
-      link.lo = !!~nodes[j].advisors.indexOf(nodes[i]);
+      link.hi = Array.isArray(nodes[i].advisors) && !!~nodes[i].advisors.indexOf(nodes[j]);
+      link.lo = Array.isArray(nodes[j].advisors) && !!~nodes[j].advisors.indexOf(nodes[i]);
+
       // Only store the link if it exists in either direction
       if (link.hi || link.lo) {
         links.push(link);
