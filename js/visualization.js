@@ -69,7 +69,10 @@ Visualization.prototype.start = function () {
     .attr('class', 'link');
   this.link.exit().remove();
 
-  this.force.start();
+  this.force
+    .nodes(this.state.current.nodes)
+    .links(links)
+    .start();
 };
 
 Visualization.prototype.tick = function () {
