@@ -9,6 +9,11 @@ var Visualization = function (state) {
 
 Visualization.prototype = _.clone(EventEmitter.prototype);
 
+Visualization.messageColors = {
+  'ping': '#60BD68',
+  'pong': '#5DA5DA'
+};
+
 Visualization.prototype.setup = function () {
   this.svg = d3.select('body').append('svg')
       .attr('width', this.width)
@@ -27,6 +32,7 @@ Visualization.prototype.setup = function () {
   // Create the SVG groups
   this.linkGroup = this.svg.append("g").attr("id","linkGroup");
   this.arrowheadGroup = this.svg.append("g").attr("id","arrowheadGroup");
+  this.messageGroup = this.svg.append("g").attr("id","messageGroup");
   this.nodeGroup = this.svg.append("g").attr("id","nodeGroup");
 
   // Create the arrowhead path
@@ -56,6 +62,7 @@ Visualization.prototype.start = function () {
     .data(this.state.current.nodes, function(d) { return d.id;});
   this.node.enter().append('circle')
     .attr('class', 'node')
+    .attr('r', 15)
     .on('click', this.handleNodeClick.bind(this))
     .on('dblclick', Visualization.handleNodeDblClick)
     .classed("fixed", function(d) { return d.fixed; })
@@ -73,20 +80,44 @@ Visualization.prototype.start = function () {
     .nodes(this.state.current.nodes)
     .links(links)
     .start();
+
+  // console.log(_.cloneDeep(this.state.current.messages));
+  this.message = this.messageGroup.selectAll(".message")
+    .data(this.state.current.messages, function (d) { return d.id; });
+  this.message.enter().append('circle')
+    .attr('class', 'message')
+    .attr('r', 10)
+    .style('fill', function (d) { return Visualization.messageColors[d.type]; });
+  this.message.exit().remove();
 };
 
 Visualization.prototype.tick = function () {
-  this.node.attr('r', 15)
-      .attr('cx', function(d) { return d.x; })
-      .attr('cy', function(d) { return d.y; })
-      .style('fill', function (d) { return d.color; });
+  var _this = this;
 
-  this.link.attr('x1', function(d) { return d.source.x; })
-      .attr('y1', function(d) { return d.source.y; })
-      .attr('x2', function(d) { return d.target.x; })
-      .attr('y2', function(d) { return d.target.y; })
-      .attr("marker-start", function (d) { return d.lo ? "url(#start)" : null; })
-      .attr("marker-end", function (d) { return d.hi ? "url(#end)" : null; });
+  this.node
+    .attr('cx', function(d) { return d.x; })
+    .attr('cy', function(d) { return d.y; })
+    .style('fill', function (d) { return d.color; });
+
+  this.link
+    .attr('x1', function(d) { return d.source.x; })
+    .attr('y1', function(d) { return d.source.y; })
+    .attr('x2', function(d) { return d.target.x; })
+    .attr('y2', function(d) { return d.target.y; })
+    .attr("marker-start", function (d) { return d.lo ? "url(#start)" : null; })
+    .attr("marker-end", function (d) { return d.hi ? "url(#end)" : null; });
+
+  this.message
+    .attr('cx', function (d) {
+      var pos = (_this.state.current.time - d.sendTime) / (d.recvTime - d.sendTime);
+      pos = Math.max(0, Math.min(1, pos));
+      return d.source.x + (d.target.x - d.source.x) * pos;
+    })
+    .attr('cy', function (d) {
+      var pos = (_this.state.current.time - d.sendTime) / (d.recvTime - d.sendTime);
+      pos = Math.max(0, Math.min(1, pos));
+      return d.source.y + (d.target.y - d.source.y) * pos;
+    });
 };
 
 Visualization.prototype.handleNodeClick = function (d) {

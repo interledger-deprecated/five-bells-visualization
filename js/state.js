@@ -62,6 +62,7 @@ State.prototype.advance = function (time) {
   this.current.time = time;
   if (this.updater(this)) {
     this.save();
+    this.emit('change');
   }
   this.runTimers(time);
 };
@@ -73,7 +74,7 @@ State.prototype.save = function () {
 State.prototype.seek = function (time) {
   if (time <= this.maxTime) {
     this.rewind(time);
-  } else if (time > maxTime) {
+  } else if (time > this.maxTime) {
     this.advance(time);
   }
 };
