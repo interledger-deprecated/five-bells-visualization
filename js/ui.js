@@ -30,7 +30,7 @@ UI.prototype.addTrust = function () {
   var _this = this;
 
   // Unregister any existing nodeClick handlers
-  this.viz.removeListener('nodeClick');
+  this.viz.removeAllListeners('nodeClick');
 
   this.viz.once('nodeClick', function (node) {
     var firstNode = node;
@@ -56,7 +56,7 @@ UI.prototype.deleteNode = function () {
   var _this = this;
 
   // Unregister any existing nodeClick handlers
-  this.viz.removeListener('nodeClick');
+  this.viz.removeAllListeners('nodeClick');
 
   this.viz.once('nodeClick', function (removedNode) {
     var nodeId = _this.state.current.nodes.indexOf(removedNode);
