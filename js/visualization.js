@@ -9,11 +9,6 @@ var Visualization = function (state) {
 
 Visualization.prototype = _.clone(EventEmitter.prototype);
 
-Visualization.messageColors = {
-  'ping': '#60BD68',
-  'pong': '#5DA5DA'
-};
-
 Visualization.prototype.setup = function () {
   this.svg = d3.select('body').append('svg')
       .attr('width', this.width)
@@ -85,9 +80,8 @@ Visualization.prototype.start = function () {
   this.message = this.messageGroup.selectAll(".message")
     .data(this.state.current.messages, function (d) { return d.id; });
   this.message.enter().append('circle')
-    .attr('class', 'message')
-    .attr('r', 10)
-    .style('fill', function (d) { return Visualization.messageColors[d.type]; });
+    .attr('class', function (d) { return 'message type-'+d.type; })
+    .attr('r', 10);
   this.message.exit().remove();
 };
 

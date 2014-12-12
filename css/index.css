@@ -19,3 +19,11 @@ html, body {
   stroke: #333;
   stroke-width: 2px;
 }
+
+.message.type-ping {
+  fill: #60BD68;
+}
+
+.message.type-pong {
+  fill: #5DA5DA;
+}
