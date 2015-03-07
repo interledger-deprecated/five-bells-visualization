@@ -1,3 +1,5 @@
+import { Ripple } from 'js/ripple';
+
 jQuery(function ($) {
   var width = $(document).width();
   var height = $(document).height();
