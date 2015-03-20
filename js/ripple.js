@@ -1,6 +1,6 @@
-import { Network } from 'js/network';
+import Network from 'js/network';
 
-export class Ripple extends Network {
+export default class Ripple extends Network {
   constructor() {
     super();
 
@@ -8,16 +8,14 @@ export class Ripple extends Network {
     this.state = 'open';
   }
 
-  update(model) {
-    super.update(model);
+  updateStates(model) {
+    super.updateStates(model);
 
     // Run algorithm rules
-    model.nodes.forEach(function (node) {
+    model.nodes.forEach(node => {
       if (node.state !== 'sent') {
-        model.nodes.forEach(function (otherNode) {
-          if (otherNode !== node) {
-            _this.sendMessage(model, {source: node, target: otherNode, type: 'ping'});
-          }
+        this.broadcastMessage(model, node, {
+          type: 'ping'
         });
         node.state = 'sent';
       }
@@ -28,10 +26,3 @@ export class Ripple extends Network {
 
   }
 }
-// var Ripple = function () {
-//   Node.call(this);
-// };
-//
-// Ripple.prototype.startConsensus = function () {
-//
-// };

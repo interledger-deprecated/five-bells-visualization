@@ -3,13 +3,15 @@ var MAX_RPC_LATENCY = 15000;
 
 var unique = 0;
 
-export class Network {
+export default class Network {
   update(model) {
     var _this = this;
 
     var dirty = false;
 
     var previousLength = model.messages.length;
+
+    this.updateStates(model);
 
     // Detect if any new messages were sent
     dirty = dirty || model.messages.length !== previousLength;
@@ -37,8 +39,12 @@ export class Network {
     return dirty;
   }
 
+  updateStates(model) {
+
+  }
+
   sendMessage(model, message) {
-    message.id = "message" + unique++;
+    message.id = 'message' + unique++;
     message.sendTime = model.time;
     message.recvTime = model.time +
                        MIN_RPC_LATENCY +
@@ -48,17 +54,21 @@ export class Network {
 
   handleMessage(model, message) {
     if (message.type === 'ping') {
-      this.sendMessage(model, {source: message.target, target: message.source, type: 'pong'});
+      this.sendMessage(model, {
+        source: message.target,
+        target: message.source,
+        type: 'pong'
+      });
     }
   }
 
   broadcastMessage(model, node, message) {
-    model.nodes.forEach(function (otherNode) {
+    model.nodes.forEach(otherNode => {
       if (otherNode !== node) {
-        var msg = _.cloneDeep(message);
+        const msg = _.cloneDeep(message);
         msg.source = node;
         msg.target = otherNode;
-        _this.sendMessage(model, msg);
+        this.sendMessage(model, msg);
       }
     });
   }

@@ -1,4 +1,4 @@
-import { Ripple } from 'js/ripple';
+import Ripple from 'js/ripple';
 
 jQuery(function ($) {
   var width = $(document).width();
