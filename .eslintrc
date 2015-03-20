@@ -174,3 +174,10 @@ ecmaFeatures:
   spread: true
   templateStrings: true
   unicodeCodePointEscapes: true
+globals:
+  $: true
+  _: true
+  dat: true
+  d3: true
+  EventEmitter: true
+  jQuery: true

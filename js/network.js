@@ -1,23 +1,21 @@
-var MIN_RPC_LATENCY = 10000;
-var MAX_RPC_LATENCY = 15000;
+const MIN_RPC_LATENCY = 10000;
+const MAX_RPC_LATENCY = 15000;
 
-var unique = 0;
+let unique = 0;
 
 export default class Network {
   update(model) {
-    var _this = this;
+    let dirty = false;
 
-    var dirty = false;
-
-    var previousLength = model.messages.length;
+    const previousLength = model.messages.length;
 
     this.updateStates(model);
 
     // Detect if any new messages were sent
     dirty = dirty || model.messages.length !== previousLength;
 
-    var deliver = [];
-    var keep = [];
+    const deliver = [];
+    const keep = [];
     model.messages.forEach(function (message) {
       if (message.recvTime <= model.time) {
         deliver.push(message);
@@ -32,16 +30,14 @@ export default class Network {
     model.messages = keep;
 
     // Handle messages to be delivered
-    deliver.forEach(function (message) {
-      _this.handleMessage(model, message);
+    deliver.forEach(message => {
+      this.handleMessage(model, message);
     });
 
     return dirty;
   }
 
-  updateStates(model) {
-
-  }
+  updateStates() { }
 
   sendMessage(model, message) {
     message.id = 'message' + unique++;
