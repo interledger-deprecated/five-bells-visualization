@@ -1,4 +1,4 @@
-import Network from 'js/network';
+import Network from 'src/js/client/network';
 
 export default class Ripple extends Network {
   constructor() {

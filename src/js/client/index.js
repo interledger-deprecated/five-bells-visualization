@@ -1,25 +1,14 @@
-import Ripple from 'js/ripple';
-import { interconnectFully } from 'js/util';
-import UI from 'js/ui';
-import State from 'js/state';
-import Analyzer from 'js/analyzer';
-import Visualization from 'js/visualization';
+import Ripple from 'src/js/client/ripple';
+import { interconnectFully } from 'src/js/client/util';
+import UI from 'src/js/client/ui';
+import State from 'src/js/client/state';
+import Analyzer from 'src/js/client/analyzer';
+import Visualization from 'src/js/client/visualization';
+import Parser from 'src/js/client/parser';
 
-jQuery(function ($) {
-  let width = $(document).width();
-  let height = $(document).height();
-
-  const initialNodes = [
-    {id: 0, x: width / 2 - 61.1, y: height / 2 - 61.1, quorum: 3, fixed: true},
-    {id: 1, x: width / 2 + 61.1, y: height / 2 - 61.1, quorum: 3, fixed: true},
-    {id: 2, x: width / 2 - 61.1, y: height / 2 + 61.1, quorum: 3, fixed: true},
-    {id: 3, x: width / 2 + 61.1, y: height / 2 + 61.1, quorum: 3, fixed: true}
-  ];
-
-  interconnectFully(initialNodes);
-
+jQuery(function () {
   const state = window.state = new State({
-    nodes: initialNodes,
+    nodes: [],
     messages: []
   });
 
@@ -31,12 +20,14 @@ jQuery(function ($) {
 
   // We need to create the analyzer before the visualization, so that things
   // update in the correct order.
-  window.analyzer = new Analyzer(state);
+  // window.analyzer = new Analyzer(state);
 
   const viz = window.viz = new Visualization(state);
   viz.setup();
 
   window.ui = new UI(state, viz);
+
+  const parser = window.parser = new Parser(state);
 
   let last = null;
   function step(timestamp) {
@@ -56,4 +47,13 @@ jQuery(function ($) {
     window.requestAnimationFrame(step);
   }
   window.requestAnimationFrame(step);
+
+  // Get log stream from server
+  const socket = io();
+  socket.on('connect', function () {
+    console.log('socket.io connected');
+  });
+  socket.on('line', function (line) {
+    parser.parseLine(line);
+  });
 });

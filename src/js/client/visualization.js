@@ -1,4 +1,4 @@
-import { greatestLower, generateLinks } from 'js/util';
+import { greatestLower, generateLinks } from 'src/js/client/util';
 
 export default class Visualization extends EventEmitter {
   constructor(state) {

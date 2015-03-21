@@ -1,0 +1,35 @@
+{
+  "name": "five-bells-visualization",
+  "version": "1.0.0",
+  "description": "Tool to visualize Five Bells logs.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ripple/five-bells-visualization.git"
+  },
+  "keywords": [
+    "visualization",
+    "realtime",
+    "log",
+    "d3",
+    "d3js",
+    "five-bells"
+  ],
+  "author": "Ripple <info@ripple.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ripple/five-bells-visualization/issues"
+  },
+  "homepage": "https://github.com/ripple/five-bells-visualization",
+  "dependencies": {
+    "byline": "^4.2.1",
+    "co-stream": "^0.1.0",
+    "koa": "^0.18.1",
+    "koa-static": "^1.4.9",
+    "socket.io": "^1.3.5"
+  },
+  "private": true
+}
