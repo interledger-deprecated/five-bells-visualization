@@ -58,21 +58,26 @@ export function generateLinks(nodes) {
   const links = [];
 
   // For all combinations of nodes
-  for (let i = 0, l = nodes.length; i < l; i++) {
-    for (let j = i + 1; j < l; j++) {
-      // Create a link
-      const link = {
-        source: nodes[i],
-        target: nodes[j]
-      };
-      link.hi = Array.isArray(nodes[i].advisors) &&
-                !!~nodes[i].advisors.indexOf(nodes[j]);
-      link.lo = Array.isArray(nodes[j].advisors) &&
-                !!~nodes[j].advisors.indexOf(nodes[i]);
-
-      // Only store the link if it exists in either direction
-      if (link.hi || link.lo) {
-        links.push(link);
+  for (let node of nodes) {
+    if (node.type === 'trader') {
+      for (let otherNode of nodes) {
+        for (let direction of ['source', 'target']) {
+          if (otherNode.identity === node[direction]) {
+            links.push({
+              source: node,
+              target: otherNode
+            });
+          }
+        }
+      }
+    } else if (node.type === 'user') {
+      for (let otherNode of nodes) {
+        if (otherNode.identity === node.ledger) {
+          links.push({
+            source: node,
+            target: otherNode
+          });
+        }
       }
     }
   }

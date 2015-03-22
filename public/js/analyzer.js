@@ -1,4 +1,4 @@
-import { stronglyConnectedComponents } from 'src/js/client/graph';
+import { stronglyConnectedComponents } from 'js/graph';
 
 class Analyzer {
   constructor(state) {

@@ -1,10 +1,10 @@
-import Ripple from 'src/js/client/ripple';
-import { interconnectFully } from 'src/js/client/util';
-import UI from 'src/js/client/ui';
-import State from 'src/js/client/state';
-import Analyzer from 'src/js/client/analyzer';
-import Visualization from 'src/js/client/visualization';
-import Parser from 'src/js/client/parser';
+import Ripple from 'js/ripple';
+import { interconnectFully } from 'js/util';
+import UI from 'js/ui';
+import State from 'js/state';
+import Analyzer from 'js/analyzer';
+import Visualization from 'js/visualization';
+import Parser from 'js/parser';
 
 jQuery(function () {
   const state = window.state = new State({
@@ -53,7 +53,8 @@ jQuery(function () {
   socket.on('connect', function () {
     console.log('socket.io connected');
   });
-  socket.on('line', function (line) {
-    parser.parseLine(line);
+  socket.on('event', function (event) {
+    console.log(event);
+    parser.parseEvent(event);
   });
 });

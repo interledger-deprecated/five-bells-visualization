@@ -1,0 +1,57 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/*
+// '#60BD68', // green
+// '#FAA43A', // orange
+// '#5DA5DA', // blue
+// '#F17CB0', // pink
+// '#B2912F', // brown
+// '#B276B2', // purple
+// '#DECF3F', // yellow
+// '#F15854', // red
+// '#4D4D4D'  // gray
+*/
+
+.node {
+  fill: #ccc;
+  stroke: none;
+}
+
+.node.type-ledger {
+  fill: #5DA5DA;
+}
+
+.node.type-trader {
+  fill: #F15854;
+}
+
+/*.node.type-five-bells-recipient {
+  fill: #FAA43A;
+}
+
+.node.type-simple-example {
+  fill: #B276B2;
+}*/
+
+.link {
+  fill: none;
+  stroke: #777;
+  stroke-width: 2px;
+}
+
+.node.fixed {
+  stroke: #333;
+  stroke-width: 2px;
+}
+
+.message.type-ping {
+  fill: #60BD68;
+}
+
+.message.type-pong {
+  fill: #5DA5DA;
+}

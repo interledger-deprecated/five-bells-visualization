@@ -1,4 +1,4 @@
-import { greatestLower, generateLinks } from 'src/js/client/util';
+import { greatestLower, generateLinks } from 'js/util';
 
 export default class Visualization extends EventEmitter {
   constructor(state) {
@@ -18,14 +18,15 @@ export default class Visualization extends EventEmitter {
         .attr('height', this.height);
 
     this.force = d3.layout.force()
+        .charge(-400)
+        .gravity(0.01)
+        .linkDistance(50)
         .size([this.width, this.height])
         .nodes(this.state.current.nodes)
         .links(generateLinks(this.state.current.nodes));
 
     this.drag = this.force.drag()
       .on('dragstart', Visualization.handleNodeDragStart);
-
-    this.force.linkDistance(150);
 
     // Create the SVG groups
     this.linkGroup = this.svg.append('g').attr('id', 'linkGroup');
@@ -59,8 +60,8 @@ export default class Visualization extends EventEmitter {
     this.node = this.nodeGroup.selectAll('.node')
       .data(this.state.current.nodes, d => d.id);
     this.node.enter().append('circle')
-      .attr('class', 'node')
-      .attr('r', 15)
+      .attr('class', d => 'node type-' + d.type)
+      .attr('r', 10)
       .on('click', this.handleNodeClick.bind(this))
       .on('dblclick', Visualization.handleNodeDblClick)
       .classed('fixed', d => d.fixed)
@@ -84,7 +85,7 @@ export default class Visualization extends EventEmitter {
       .data(this.state.current.messages, d => d.id);
     this.message.enter().append('circle')
       .attr('class', d => 'message type-' + d.type)
-      .attr('r', 10);
+      .attr('r', 6);
     this.message.exit().remove();
   }
 

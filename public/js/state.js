@@ -1,4 +1,4 @@
-import { greatestLower } from 'src/js/client/util';
+import { greatestLower } from 'js/util';
 
 export default class State extends EventEmitter {
 
