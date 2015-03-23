@@ -18,7 +18,7 @@ export default class Visualization extends EventEmitter {
         .attr('height', this.height);
 
     this.force = d3.layout.force()
-        .charge(-400)
+        .charge(-100)
         .gravity(0.01)
         .linkDistance(50)
         .size([this.width, this.height])
@@ -33,6 +33,7 @@ export default class Visualization extends EventEmitter {
     this.arrowheadGroup = this.svg.append('g').attr('id', 'arrowheadGroup');
     this.messageGroup = this.svg.append('g').attr('id', 'messageGroup');
     this.nodeGroup = this.svg.append('g').attr('id', 'nodeGroup');
+    this.eventGroup = this.svg.append('g').attr('id', 'eventGroup');
 
     // Create the arrowhead path
     this.svg.append('svg:defs').selectAll('marker')
@@ -75,6 +76,24 @@ export default class Visualization extends EventEmitter {
       .attr('class', 'link');
     this.link.exit().remove();
 
+    const events = Array.from(this.state.current.events);
+    this.event = this.eventGroup.selectAll('.event')
+      .data(events, d => d.id);
+    const eventContainer = this.event.enter().append('g')
+      .attr('class', d => 'event state-' + d.state);
+    eventContainer.append('rect')
+      .attr('rx', 6)
+      .attr('ry', 6)
+      .attr('x', -50)
+      .attr('y', -12.5)
+      .attr('width', 100)
+      .attr('height', 25);
+    eventContainer.append('text')
+      .text(d => d.text);
+    this.event.exit().transition()
+      .style('opacity', 0)
+      .remove();
+
     this.force
       .nodes(this.state.current.nodes)
       .links(links)
@@ -102,6 +121,12 @@ export default class Visualization extends EventEmitter {
       .attr('y2', d => d.target.y)
       .attr('marker-start', d => d.lo ? 'url(#start)' : null)
       .attr('marker-end', d => d.hi ? 'url(#end)' : null);
+
+    this.event
+      .attr('class', d => 'event state-' + d.state)
+      .attr('transform', d => 'translate(' + (d.related.x + d.offsetX) + ',' +
+        (d.related.y + d.offsetY) + ')')
+      .select('text').text(d => d.text);
 
     this.message
       .attr('cx', d => {

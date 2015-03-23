@@ -9,7 +9,8 @@ import Parser from 'js/parser';
 jQuery(function () {
   const state = window.state = new State({
     nodes: [],
-    messages: []
+    messages: [],
+    events: new Set()
   });
 
   const ripple = window.ripple = new Ripple();
@@ -56,5 +57,7 @@ jQuery(function () {
   socket.on('event', function (event) {
     console.log(event);
     parser.parseEvent(event);
+    viz.tick();
+    viz.start();
   });
 });

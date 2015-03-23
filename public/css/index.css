@@ -55,3 +55,26 @@ html, body {
 .message.type-pong {
   fill: #5DA5DA;
 }
+
+.event {
+}
+
+.event rect {
+  fill: #ccc;
+}
+
+.event.state-proposed rect {
+  fill: #DECF3F;
+}
+
+.event.state-completed rect {
+  fill: #60BD68;
+}
+
+.event text {
+  text-anchor: middle;
+  font-family: 'Open Sans', sans-serif;
+  alignment-baseline: middle;
+  fill: #fff;
+  font-size: 0.9rem;
+}

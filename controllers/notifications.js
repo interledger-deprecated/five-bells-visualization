@@ -1,7 +1,11 @@
 'use strict';
 
-const body = require('co-body');
+const parse = require('co-body');
+const emitter = require('co-emitter');
 
 exports.post = function *postNotification() {
-  console.log(yield body(this));
+  const body = yield parse(this);
+  exports.emit('notification', body);
 };
+
+emitter(exports);

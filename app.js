@@ -33,6 +33,13 @@ broker.setBroadcaster(io);
   });
 });
 
+notifications.on('notification', function (notification) {
+  // We don't need these to be persistent, so we bypass the broker
+  io.emit('event', {
+    type: 'notification',
+    detail: notification
+  });
+});
 // crawler.on('trader', function (detail) {
 //   broker.emit({
 //     type: 'trader',
