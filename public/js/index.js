@@ -26,9 +26,9 @@ jQuery(function () {
   const viz = window.viz = new Visualization(state);
   viz.setup();
 
-  window.ui = new UI(state, viz);
-
   const parser = window.parser = new Parser(state);
+
+  const ui = window.ui = new UI(state, viz, parser);
 
   let last = null;
   function step(timestamp) {
@@ -49,6 +49,40 @@ jQuery(function () {
   }
   window.requestAnimationFrame(step);
 
+  function processEvent(event) {
+    console.log(new Date, event.detail.resource && event.detail.resource.id);
+    parser.parseEvent(event);
+    viz.tick();
+    viz.start();
+  }
+
+  const queue = [];
+  let queueTimer = null;
+  function processQueue() {
+    if (queueTimer) {
+      return;
+    }
+
+    if (!ui.rateLimit) {
+      do {
+        if (queue.length) {
+          processEvent(queue.shift());
+        }
+      } while (queue.length);
+    } else if (queue.length) {
+      processEvent(queue.shift());
+      queueTimer = setTimeout(() => {
+        queueTimer = null;
+        processQueue();
+      }, 1000);
+    }
+  }
+
+  function queueEvent(event) {
+    queue.push(event);
+    processQueue();
+  }
+
   // Get log stream from server
   const socket = io();
   socket.on('connect', function () {
@@ -56,8 +90,6 @@ jQuery(function () {
   });
   socket.on('event', function (event) {
     console.log(event);
-    parser.parseEvent(event);
-    viz.tick();
-    viz.start();
+    queueEvent(event);
   });
 });

@@ -5,6 +5,17 @@ export default class Parser {
     this.state = state;
     this.nodes = new Map();
     this.events = new Map();
+    this.queue = [];
+    this.queueTimer = null;
+  }
+
+  receiveEvent(event) {
+    event.id = seq++;
+    this.queue.push(event);
+    this.processQueue();
+  }
+
+  processQueue() {
   }
 
   parseEvent(event) {
