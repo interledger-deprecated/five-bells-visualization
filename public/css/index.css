@@ -63,12 +63,12 @@ html, body {
   fill: #ccc;
 }
 
-.event.state-proposed rect {
-  fill: #DECF3F;
+.event.state-prepared rect {
+  fill: #fdb34d;
 }
 
 .event.state-completed rect {
-  fill: #60BD68;
+  fill: #42b186;
 }
 
 .event text {
