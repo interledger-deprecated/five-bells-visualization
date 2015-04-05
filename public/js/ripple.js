@@ -10,16 +10,6 @@ export default class Ripple extends Network {
 
   updateStates(model) {
     super.updateStates(model);
-
-    // Run algorithm rules
-    model.nodes.forEach(node => {
-      if (node.state !== 'sent') {
-        this.broadcastMessage(model, node, {
-          type: 'ping'
-        });
-        node.state = 'sent';
-      }
-    });
   }
 
   startConsensus() {
