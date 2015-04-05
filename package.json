@@ -36,6 +36,7 @@
     "co-stream": "^0.1.0",
     "five-bells-shared": "git+https://569d9e97620f8ac44643f69afdea08af8ff72a5b@github.com/ripple/five-bells-shared#v1.1.1",
     "koa": "^0.18.1",
+    "koa-mag": "^1.0.4",
     "koa-route": "^2.4.0",
     "koa-static": "^1.4.9",
     "lodash": "^3.5.0",

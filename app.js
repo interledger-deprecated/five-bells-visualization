@@ -8,16 +8,26 @@ const byline = require('byline');
 const stripAnsi = require('strip-ansi');
 const co = require('co');
 const request = require('co-request');
+const logger = require('koa-mag');
 const log = require('five-bells-shared/services/log');
+const errorHandler = require('five-bells-shared/middlewares/error-handler');
 const notifications = require('./controllers/notifications');
+const quote = require('./controllers/quote');
+const settlements = require('./controllers/settlements');
 const config = require('./services/config');
 const crawler = require('./services/crawler');
 const broker = require('./services/broker');
 require('./services/subscriber');
 
+app.use(logger());
+app.use(errorHandler);
+
 app.use(serve(__dirname + '/public'));
 
 app.use(route.post('/notifications', notifications.post));
+
+app.use(route.get('/quote', quote.get));
+app.use(route.put('/settlements/:uuid', settlements.put));
 
 const server = require('http').createServer(app.callback());
 const io = require('socket.io')(server);
