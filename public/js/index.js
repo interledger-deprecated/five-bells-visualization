@@ -56,7 +56,7 @@ jQuery(function () {
     viz.start();
   }
 
-  const queue = [];
+  let queue = [];
   let queueTimer = null;
   function processQueue() {
     if (queueTimer) {
@@ -87,6 +87,15 @@ jQuery(function () {
   const socket = io();
   socket.on('connect', function () {
     console.log('socket.io connected');
+  });
+  // Clear is triggered on reconnect, so we can start from a clean slate
+  socket.on('clear', function () {
+    // Cancel any currently queued events
+    queue = [];
+    // Reset the state to the initial setting
+    state.clear();
+    // Update the visualization
+    viz.start();
   });
   socket.on('event', function (event) {
     console.log(event);
