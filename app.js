@@ -11,6 +11,7 @@ const request = require('co-request');
 const logger = require('koa-mag');
 const log = require('five-bells-shared/services/log');
 const errorHandler = require('five-bells-shared/middlewares/error-handler');
+const bells = require('five-bells-shared/middlewares/bells');
 const notifications = require('./controllers/notifications');
 const quote = require('./controllers/quote');
 const settlements = require('./controllers/settlements');
@@ -48,6 +49,13 @@ notifications.on('notification', function (notification) {
   io.emit('event', {
     type: 'notification',
     detail: notification
+  });
+});
+
+settlements.on('settlement', function (settlement) {
+  io.emit('settlement', {
+    type: 'settlement',
+    detail: settlement
   });
 });
 // crawler.on('trader', function (detail) {

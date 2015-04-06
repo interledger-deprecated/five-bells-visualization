@@ -3,6 +3,7 @@
 const config = require('../services/config');
 const log = require('five-bells-shared/services/log')('quote');
 const pathfinder = require('../services/pathfinder');
+const orchestrator = require('../services/orchestrator');
 
 function formatAmount (amount) {
   if (typeof amount === 'string') {
@@ -12,45 +13,28 @@ function formatAmount (amount) {
 }
 
 exports.get = function *() {
-  let path = pathfinder.findPath(this.query.source_ledger,
-                                 this.query.destination_ledger);
+  // TODO: Sanitize this.query
 
-  this.body = path;
+  let source = this.query.source_asset + '/' + this.query.source_ledger;
+  let destination = this.query.destination_asset + '/' +
+    this.query.destination_ledger;
+  let path = pathfinder.findPath(source, destination);
 
-  let sourceAmount, destinationAmount;
+  let settlements;
   if (this.query.source_amount) {
     log.debug('creating quote with fixed source amount');
-    sourceAmount = formatAmount(this.query.source_amount);
-    destinationAmount = formatAmount(this.query.source_amount);
+    // XXX
+    throw new Error('not implemented');
   } else if (this.query.destination_amount) {
     log.debug('creating quote with fixed destination amount');
-    sourceAmount = formatAmount(this.query.destination_amount);
-    destinationAmount = formatAmount(this.query.destination_amount);
+    settlements = yield orchestrator.quotePathFromDestination(this.query, path);
   } else {
     // XXX
     throw new Error();
   }
 
-  let source_transfer = {
-    credits: [{
-      ledger: this.query.source_ledger,
-      asset: this.query.source_asset,
-      amount: sourceAmount,
-      account: config.id
-    }]
-  };
-
-  let destination_transfer = {
-    debits: [{
-      account: config.id,
-      ledger: this.query.destination_ledger,
-      asset: this.query.destination_asset,
-      amount: destinationAmount
-    }]
-  };
-
   this.body = {
-    source_transfer: source_transfer,
-    destination_transfer: destination_transfer
+    source_transfer: settlements[0].source_transfer,
+    destination_transfer: settlements.pop().destination_transfer
   };
 };
