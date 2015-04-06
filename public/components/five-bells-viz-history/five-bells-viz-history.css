@@ -1,0 +1,7 @@
+.history .entry {
+  padding-left: 12px;
+}
+
+.history .entry > div {
+  padding: 12px;
+}

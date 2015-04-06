@@ -5,6 +5,7 @@ import State from 'js/state';
 import Analyzer from 'js/analyzer';
 import Visualization from 'js/visualization';
 import Parser from 'js/parser';
+import Highlighter from 'js/highlighter';
 
 Polymer('five-bells-viz-graph', {
   ready: function () {
@@ -24,12 +25,16 @@ Polymer('five-bells-viz-graph', {
     // update in the correct order.
     // window.analyzer = new Analyzer(state);
 
-    const viz = this.viz = window.viz = new Visualization(state);
+    const viz = this.viz = window.viz =
+      new Visualization(state, this.$.visualization);
     viz.setup();
 
     const parser = this.parser = window.parser = new Parser(state);
 
     const ui = this.ui = window.ui = new UI(state, viz, parser);
+
+    const highlighter = this.highlighter = window.highlighter =
+      new Highlighter(parser, viz);
 
     let last = null;
     function step(timestamp) {
@@ -55,10 +60,13 @@ Polymer('five-bells-viz-graph', {
   },
 
   processEvent: function(event) {
-    console.log(new Date(), event.detail.resource && event.detail.resource.id);
     this.parser.parseEvent(event);
     this.viz.tick();
-    this.viz.start();
+    if (event.type === 'notification') {
+      this.viz.updateEvents();
+    } else {
+      this.viz.start();
+    }
   },
 
   processQueue: function() {
@@ -96,7 +104,9 @@ Polymer('five-bells-viz-graph', {
     this.viz.start();
   },
   handleGraphEvent: function (event) {
-    console.log(event.detail.msg);
     this.queueEvent(event.detail.msg);
+  },
+  selectSettlement: function (settlement) {
+    this.highlighter.selectSettlement(settlement);
   }
 });

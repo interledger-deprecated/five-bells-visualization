@@ -4,9 +4,9 @@
 
 <polymer-element name="five-bells-viz-app">
   <template>
-    <div id="main" layout vertical>
-      <five-bells-viz-graph></five-bells-viz-graph>
-      <five-bells-viz-history></five-bells-viz-history>
+    <div id="main" layout>
+      <five-bells-viz-graph id="graph" fit></five-bells-viz-graph>
+      <five-bells-viz-history id="history" on-settlement-select="{{handleSettlementSelected}}"></five-bells-viz-history>
     </div>
   </template>
 

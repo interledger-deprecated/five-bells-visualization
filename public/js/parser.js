@@ -5,6 +5,7 @@ export default class Parser {
     this.state = state;
     this.nodes = new Map();
     this.events = new Map();
+    this.eventsBySettlement = new Map();
     this.queue = [];
     this.queueTimer = null;
   }
@@ -16,6 +17,14 @@ export default class Parser {
   }
 
   processQueue() {
+  }
+
+  getNode(nodeId) {
+    return this.nodes.get(nodeId);
+  }
+
+  getEventsBySettlement(settlementId) {
+    return this.eventsBySettlement.get(settlementId);
   }
 
   parseEvent(event) {
@@ -52,7 +61,10 @@ export default class Parser {
   }
 
   parseTraderEvent(event) {
-    const nodeId = event.detail.source + ';' + event.detail.destination;
+    const nodeId = (event.detail.source < event.detail.destination) ?
+      event.detail.source + ';' + event.detail.destination :
+      event.detail.destination + ';' + event.detail.source;
+
     if (this.nodes.has(nodeId)) {
       return;
     }
@@ -99,6 +111,15 @@ export default class Parser {
       this.events.set(event.detail.resource.id, notification);
       this.state.current.events.add(notification);
     }
+
+    let settlementEvents, settlementId = event.detail.resource.partOfSettlement;
+    if (this.eventsBySettlement.has(settlementId)) {
+      settlementEvents = this.eventsBySettlement.get(settlementId);
+    } else {
+      settlementEvents = new Set();
+      this.eventsBySettlement.set(settlementId, settlementEvents);
+    }
+    settlementEvents.add(event);
 
     notification.text = event.detail.resource.state;
     notification.state = event.detail.resource.state;

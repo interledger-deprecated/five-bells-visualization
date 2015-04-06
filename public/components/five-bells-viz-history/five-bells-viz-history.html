@@ -1,8 +1,23 @@
 <link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../../bower_components/core-icon/core-icon.html">
+<link rel="import" href="../../bower_components/core-icons/core-icons.html">
+<link rel="import" href="../../bower_components/paper-shadow/paper-shadow.html">
 
 <polymer-element name="five-bells-viz-history">
   <template>
-    
+    <link rel="stylesheet" href="five-bells-viz-history.css">
+    <section layout class="history" relative>
+      <paper-shadow z="1" fit></paper-shadow>
+      <template repeat="{{settlement in settlements}}">
+        <div layout horizontal class="entry" center on-tap="{{handleHistoryEntryTap}}">
+          <core-icon icon="payment"></core-icon>
+          <div>{{settlement.source_transfer.debits[0].account}}</div>
+          <core-icon icon="arrow-forward"></core-icon>
+          <div flex>{{settlement.destination_transfer.credits[0].account}}</div>
+        </div>
+      </template>
+    </section>
+    <socket-io autoConnect listenTo=["settlement"] on-s-io-settlement="{{handleSettlement}}"></socket-io>
   </template>
 
   <script>

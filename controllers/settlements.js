@@ -43,7 +43,7 @@ exports.put = function *(id) {
 
   let source = query.source_asset + '/' + query.source_ledger;
   let destination = query.destination_asset + '/' + query.destination_ledger;
-  let path = pathfinder.findPath(source, destination);
+  let path = settlement.path = pathfinder.findPath(source, destination);
 
   let settlements;
   if (query.source_amount) {
@@ -68,7 +68,7 @@ exports.put = function *(id) {
   settlements.reduce(function (left, right) {
     left.destination_transfer.credits = right.source_transfer.credits;
     right.source_transfer.debits = left.destination_transfer.debits;
-    return left;
+    return right;
   });
 
   // Create final (rightmost) transfer

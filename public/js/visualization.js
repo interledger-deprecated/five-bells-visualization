@@ -1,8 +1,10 @@
 import { greatestLower, generateLinks } from 'js/util';
 
 export default class Visualization extends EventEmitter {
-  constructor(state) {
+  constructor(state, container) {
     super();
+
+    this.container = container;
 
     this.width = window.innerWidth;
     this.height = window.innerHeight;
@@ -13,14 +15,17 @@ export default class Visualization extends EventEmitter {
   }
 
   setup() {
-    this.svg = d3.select('body').append('svg')
+    this.svg = d3.select(this.container).append('svg')
         .attr('width', this.width)
         .attr('height', this.height);
 
     this.force = d3.layout.force()
         .charge(-100)
         .gravity(0.01)
-        .linkDistance(50)
+        .linkStrength(d =>
+          (d.source.highlighted && d.target.highlighted) ? 10 : 1)
+        .linkDistance(d =>
+          (d.source.highlighted && d.target.highlighted) ? 0 : 50)
         .size([this.width, this.height])
         .nodes(this.state.current.nodes)
         .links(generateLinks(this.state.current.nodes));
@@ -71,6 +76,20 @@ export default class Visualization extends EventEmitter {
   }
 
   start() {
+    this.updateNodes();
+
+    this.updateLinks();
+
+    this.updateEvents();
+
+    this.updateMessages();
+  }
+
+  resume() {
+    this.force.resume();
+  }
+
+  updateNodes() {
     this.node = this.nodeGroup.selectAll('.node')
       .data(this.state.current.nodes, d => d.id);
     this.node.enter().append('circle')
@@ -78,22 +97,38 @@ export default class Visualization extends EventEmitter {
       .attr('r', 10)
       .on('click', this.handleNodeClick.bind(this))
       .on('dblclick', Visualization.handleNodeDblClick)
-      .classed('fixed', d => d.fixed)
       .call(this.drag);
     this.node.exit().remove();
+    this.node
+      .classed('fixed', d => d.fixed)
+      .classed('highlighted', d => d.highlighted);
+  }
 
+  updateLinks() {
     const links = generateLinks(this.state.current.nodes);
     this.link = this.linkGroup.selectAll('.link')
       .data(links, d => d.source.id + '-' + d.target.id);
     this.link.enter().append('line')
       .attr('class', 'link');
     this.link.exit().remove();
+    this.link
+      .classed('highlighted',
+        d => d.source.highlighted && d.target.highlighted);
 
+    this.force
+      .nodes(this.state.current.nodes)
+      .links(links)
+      .start();
+  }
+
+  updateEvents() {
     const events = Array.from(this.state.current.events);
     this.event = this.eventGroup.selectAll('.event')
       .data(events, d => d.id);
     const eventContainer = this.event.enter().append('g')
-      .attr('class', d => 'event state-' + d.state);
+      .attr('class', d => 'event state-' + d.state)
+      .attr('transform', d => 'translate(' + (d.related.x + d.offsetX) + ',' +
+        (d.related.y + d.offsetY) + ')');
     eventContainer.append('rect')
       .attr('rx', 6)
       .attr('ry', 6)
@@ -106,12 +141,9 @@ export default class Visualization extends EventEmitter {
     this.event.exit().transition()
       .style('opacity', 0)
       .remove();
+  }
 
-    this.force
-      .nodes(this.state.current.nodes)
-      .links(links)
-      .start();
-
+  updateMessages() {
     // console.log(_.cloneDeep(this.state.current.messages));
     this.message = this.messageGroup.selectAll('.message')
       .data(this.state.current.messages, d => d.id);

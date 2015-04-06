@@ -3,6 +3,7 @@
 
 <polymer-element name="five-bells-viz-graph">
   <template>
+    <link rel="stylesheet" href="five-bells-viz-graph.css">
     <div id="visualization"></div>
     <socket-io autoConnect listenTo=["clear","event"] on-s-io-clear="{{handleGraphClear}}" on-s-io-event="{{handleGraphEvent}}"></socket-io>
   </template>
