@@ -4,8 +4,8 @@ export default class Visualization extends EventEmitter {
   constructor(state) {
     super();
 
-    this.width = $(document).width();
-    this.height = $(document).height();
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
 
     this.state = state;
 
@@ -54,7 +54,20 @@ export default class Visualization extends EventEmitter {
 
     this.force.on('tick', this.tick.bind(this));
 
+    d3.select(window).on('resize', this.resize.bind(this));
+
     this.start();
+  }
+
+  resize() {
+    this.width = window.innerWidth;
+    this.height = window.innerHeight;
+
+    this.svg
+      .attr('width', this.width)
+      .attr('height', this.height);
+
+    this.force.size([this.width, this.height]).resume();
   }
 
   start() {
