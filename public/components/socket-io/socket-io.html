@@ -1,0 +1,268 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<script src="/socket.io/socket.io.js"></script>
+
+
+<!--
+Socket.io Element.
+
+##### Example
+
+    <socket-io></socket-io>
+
+##### Other example (see chat-client demo)!
+
+    <socket-io socketUrl="http://localhost:8082"
+        listenTo=["message","userChanged"] inMessage={{inMessage}} outMessage={{outMessage}} outEventName="message">
+    </socket-io>
+
+@element socket-io
+@blurb Web component for socket-io interactions
+@status alpha
+@homepage http://kaosat-dev.github.io/socket-io
+
+You can find a fleshed out example (small chat app) that needs to be run from a local server in this folder
+(demo-chat-client & server), see README for more information.
+
+TODO: should we expose some event so parsing the "inMessage" is optional (for more complex cases)?
+-->
+<polymer-element name="socket-io" attributes="socketUrl namespace autoConnect autoReConnect connected listenTo outEventName inMessage outMessage">
+  <script>
+    Polymer("socket-io", {
+      /**
+       * socketUrl` sets the adress of the socket url to connect to
+       * defaults to hostname
+       *
+       * @attribute socketUrl
+       * @type string
+       */
+      socketUrl:document.location.hostname +
+        (document.location.port ? ':' + document.location.port : ''),
+      /**
+       * namespace sets the namespace to use (see socket.io docs)
+       * defaults to '/'
+       *
+       * @attribute namespace
+       * @type string
+       */
+      namespace:"/",
+
+      /**
+       * 'autoConnect` toggles the automatic connection after initialization
+       *
+       * @attribute autoConnect
+       * @type bool
+       */
+      autoConnect: false,
+
+       /** The `reconnected` toggles the automatic reconnection after errors etc
+       *
+       * @attribute autoReConnect
+       * @type bool
+       */
+      autoReConnect: false,
+
+       /** The `connected` attribute is switched based on connection status, shadowing
+       *  the interal _connected attribute
+       *
+       * @attribute connected
+       * @type bool
+       */
+      connected:null,
+
+      /** internal attribute is switched based on connection stations
+       *
+       * @attribute _connected
+       * @type bool
+      */
+      _connected: false,
+
+      /**
+       * The `outEventName` attribute sets the current outgoing event's 'name'
+       *
+       * @attribute outEventName
+       * @type string
+       */
+      outEventName:"message",
+      /**
+       * `outMessage`sets the current outgoing message
+       *
+       * @attribute outMessage
+       * @type string/object
+       */
+      outMessage:null,
+      /**
+       * 'inMessage' will contain the last incoming message
+       *
+       * @attribute inMessage
+       * @type string/object
+       */
+      inMessage:null,
+      /**
+       * `listenTo` sets the list of messages to listen to
+       *
+       * @attribute listenTo
+       * @type list
+       */
+      listenTo: [],
+
+      attached:function(){
+		    window.onbeforeunload = this.beforeUnload.bind(this);
+        this.init();
+        if(this.autoConnect) this.connect();
+	    },
+      init:function()
+      {
+        if(window.io == undefined) throw new Error("Could not import socket.io library");
+
+        var manager = this.manager = io.Manager( this.socketUrl, {autoConnect: this.autoConnect, reconnection:this.autoReConnect } );
+        this.ws = manager.socket(this.namespace);
+
+	      manager.on('open', this.onConnect.bind(this) );
+	      manager.on('close', this.onDisconnect.bind(this) );
+
+        manager.on('error', this.onError.bind(this) );
+	      manager.on('connect_failed', this.onError.bind(this) );
+	      manager.on('connect_timeout', this.onError.bind(this) );
+	      manager.on('reconnect_failed', this.onReconnectFailed.bind(this) );
+	      manager.on('reconnect_error', this.onError.bind(this) );
+
+      },
+      //public api
+      /**
+       * The `emit` method will send an event with 'data' as content
+       *
+       * @method emit
+       * @param {String} event event to send
+       * @param {String} data data to send
+       */
+      emit: function(event, data)
+	    {
+			  //console.log("sending '"+event+ "'via polymer-socket-io: data",data);
+			  try
+			  {
+				  if(this.ws) this.ws.emit(event, data);
+			  }catch(error)
+			  {
+				  console.log("cannot send message: error:"+error);
+			  }
+      },
+      /**
+       * The `connect` method will ...connect this instance to the server at
+       * the current socketUrl
+       * it also disconnects this instance if previously connected before re-connecting
+       *
+       * @method connect
+       */
+	    connect:function()
+	    {
+		    this.disconnect();
+        this.ws.connect();
+	    },
+	    /**
+       * The `disconnect` method will ...disconnect this instance from the server
+       *
+       * @method disconnect
+       */
+	    disconnect:function()
+	    {
+		    if (this.ws != undefined && !this._connected)
+		    {
+          try{
+            this.ws.disconnect();
+          }
+          catch(error){
+            this.onError(error);
+          }
+        }
+	    },
+      //change handlers
+      _connectedChanged: function(oldValue)
+      {
+        this.connected = this._connected;
+      },
+      outMessageChanged: function()
+		  {
+        if(this.outMessage)
+        {
+          var fullMessage = this.outMessage;
+          var eventName = this.outEventName;
+          if( this.outMessage instanceof Object )
+          {
+            if("event" in fullMessage)
+            {
+              eventName = fullMessage.event;
+              fullMessage = fullMessage.data;
+            }
+          }
+          this.emit(eventName, fullMessage);
+        }
+      },
+      socketUrlChanged: function() {
+        if(this._connected ) this.connect();
+      },
+      namespaceChanged:function() {
+        if(this._connected ) this.connect();
+      },
+      listenToChanged: function(oldListenTo)
+      {
+        //console.log("listenToList changed",this.listenTo,this.connected,this.ws);
+        if(this.ws !== undefined)
+        {
+          if(oldListenTo)
+          {
+            for(var i=0;i<oldListenTo.length;i++)
+            {
+              var messageName = oldListenTo[i];
+              this.ws.removeAllListeners(messageName);
+            }
+          }
+          for(var i=0;i<this.listenTo.length;i++)
+          {
+            var messageName = this.listenTo[i];
+            this.ws.on(messageName, this.onMessageRecieved.bind(this, messageName));
+          }
+        }
+      },
+      //event handlers
+      onConnect:function(event){
+        //console.log("polymer-socket-io connected")
+        this._connected = true;
+        this.fire('s-io-connected');
+      },
+      onDisconnect:function(event){
+        //console.log("polymer-socket-io disconnected")
+        this._connected = false;
+        this.fire('s-io-disconnected');
+      },
+      onError:function (error)
+	    {
+		    console.log('Error in polymer-socket-io',error);
+      },
+      onReconnectFailed:function (error)
+	    {
+		    console.log('Reconnect failed polymer-socket-io',error);
+      },
+      onMessageRecieved:function(event,msg)
+      {
+        this.inMessage = {event:event,data:msg};
+        this.fire('s-io-'+event, {msg:msg});
+        //TODO: replace with <core-signals>
+      },
+	    beforeUnload: function(event) {
+		    this.disconnect();
+		    console.log("before unload");
+        this.manager.removeAllListeners('connect');
+        this.manager.removeAllListeners('disconnect');
+	      this.manager.removeAllListeners('error');
+	      this.manager.removeAllListeners('connect_failed');
+        for(var i=0;i<this.listenTo.length;i++)
+        {
+          var messageName = this.listenTo[i];
+          this.ws.removeAllListeners(messageName)
+        }
+        this.ws = null;
+        this.manager = null;
+      }
+    });
+    </script>
+</polymer-element>

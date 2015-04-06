@@ -1,0 +1,14 @@
+<link rel="import" href="../../bower_components/polymer/polymer.html">
+<link rel="import" href="../socket-io/socket-io.html">
+
+<polymer-element name="five-bells-viz-graph">
+  <template>
+    <div id="visualization"></div>
+    <socket-io autoConnect listenTo=["clear","event"] on-s-io-clear="{{handleGraphClear}}" on-s-io-event="{{handleGraphEvent}}"></socket-io>
+  </template>
+
+  <script>
+    System.import('components/five-bells-viz-graph/five-bells-viz-graph');
+  </script>
+
+</polymer-element>

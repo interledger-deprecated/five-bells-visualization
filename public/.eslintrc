@@ -121,7 +121,7 @@ rules:
   max-nested-callbacks: [1, 2]
   max-params: [1, 4]
   max-statements: [0, 10]
-  new-cap: 2
+  new-cap: [2, {capIsNewExceptions: ['Polymer']}]
   new-parens: 2
   one-var: 0
   operator-assignment: [0, 'always']
@@ -182,3 +182,4 @@ globals:
   EventEmitter: true
   jQuery: true
   io: true
+  Polymer: true

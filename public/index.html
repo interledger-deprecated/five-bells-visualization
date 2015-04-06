@@ -10,12 +10,6 @@
   <meta name="viewport" content="width=device-width">
   <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
   <link rel="stylesheet" href="css/index.css">
-</head>
-<body>
-  <div id="main">
-    <div id="visualization"></div>
-  </div>
-
   <script src="bower_components/eventEmitter/EventEmitter.min.js"></script>
   <script src="bower_components/lodash/dist/lodash.min.js"></script>
   <script src="bower_components/jquery/dist/jquery.min.js"></script>
@@ -23,9 +17,10 @@
   <script src="bower_components/dat-gui/build/dat.gui.min.js"></script>
   <script src="bower_components/traceur/traceur.min.js"></script>
   <script src="bower_components/es6-module-loader/dist/es6-module-loader.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script>
-    System.import('js/index');
-  </script>
+  <script src="bower_components/webcomponentsjs/webcomponents.min.js"></script>
+  <link rel="import" href="components/five-bells-viz-app/five-bells-viz-app.html">
+</head>
+<body>
+  <five-bells-viz-app/>
 </body>
 </html>
