@@ -15,6 +15,7 @@ const bells = require('five-bells-shared/middlewares/bells');
 const notifications = require('./controllers/notifications');
 const quote = require('./controllers/quote');
 const settlements = require('./controllers/settlements');
+const ledgers = require('./controllers/ledgers');
 const config = require('./services/config');
 const crawler = require('./services/crawler');
 const broker = require('./services/broker');
@@ -29,6 +30,8 @@ app.use(route.post('/notifications', notifications.post));
 
 app.use(route.get('/quote', quote.get));
 app.use(route.put('/settlements/:uuid', settlements.put));
+
+app.use(route.get('/ledgers', ledgers.list));
 
 const server = require('http').createServer(app.callback());
 const io = require('socket.io')(server);
