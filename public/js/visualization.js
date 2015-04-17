@@ -95,7 +95,7 @@ export default class Visualization extends EventEmitter {
       .data(this.state.current.nodes, d => d.id);
     this.node.enter().append('circle')
       .attr('class', d => 'node type-' + d.type)
-      .attr('r', 10)
+      .attr('r', d => d.type === 'user' ? 6 : 10)
       .on('click', this.handleNodeClick.bind(this))
       .on('dblclick', Visualization.handleNodeDblClick)
       .call(this.drag);
