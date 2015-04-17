@@ -77,7 +77,7 @@ export default class Parser {
       target: event.detail.destination
     };
     this.nodes.set(nodeId, node);
-    this.state.current.nodes.push(node);
+    this.state.current.traders.push(node);
   }
 
   parseUserEvent(event) {

@@ -54,23 +54,30 @@ export function interconnectFully(nodes) {
  *
  *     [ { source: <nodes[0]>, target: <nodes[1]> }]
  */
-export function generateLinks(nodes) {
+export function generateLinks(nodes, traders) {
   const links = [];
+
+  for (let node of traders) {
+    let source, target;
+    for (source of nodes) {
+      if (source.identity === node.source) {
+        break;
+      }
+    }
+    for (target of nodes) {
+      if (target.identity === node.target) {
+        break;
+      }
+    }
+    links.push({
+      source: source,
+      target: target
+    });
+  }
 
   // For all combinations of nodes
   for (let node of nodes) {
-    if (node.type === 'trader') {
-      for (let otherNode of nodes) {
-        for (let direction of ['source', 'target']) {
-          if (otherNode.identity === node[direction]) {
-            links.push({
-              source: node,
-              target: otherNode
-            });
-          }
-        }
-      }
-    } else if (node.type === 'user') {
+    if (node.type === 'user') {
       for (let otherNode of nodes) {
         if (otherNode.identity === node.ledger) {
           links.push({

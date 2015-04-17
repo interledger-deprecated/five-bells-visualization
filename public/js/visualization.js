@@ -28,7 +28,8 @@ export default class Visualization extends EventEmitter {
           (d.source.highlighted && d.target.highlighted) ? 0 : 50)
         .size([this.width, this.height])
         .nodes(this.state.current.nodes)
-        .links(generateLinks(this.state.current.nodes));
+        .links(generateLinks(this.state.current.nodes,
+          this.state.current.traders));
 
     this.drag = this.force.drag()
       .on('dragstart', Visualization.handleNodeDragStart);
@@ -105,7 +106,8 @@ export default class Visualization extends EventEmitter {
   }
 
   updateLinks() {
-    const links = generateLinks(this.state.current.nodes);
+    const links = generateLinks(this.state.current.nodes,
+      this.state.current.traders);
     this.link = this.linkGroup.selectAll('.link')
       .data(links, d => d.source.id + '-' + d.target.id);
     this.link.enter().append('line')

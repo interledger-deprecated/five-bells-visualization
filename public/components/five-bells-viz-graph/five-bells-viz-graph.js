@@ -11,6 +11,7 @@ Polymer('five-bells-viz-graph', {
   ready: function () {
     const state = this.state = window.state = new State({
       nodes: [],
+      traders: [],
       messages: [],
       events: new Set()
     });
@@ -66,6 +67,7 @@ Polymer('five-bells-viz-graph', {
       this.viz.updateEvents();
     } else {
       this.viz.start();
+      this.viz.resume();
     }
   },
 
@@ -98,9 +100,9 @@ Polymer('five-bells-viz-graph', {
   handleGraphClear: function () {
     // Cancel any currently queued events
     this.queue = [];
-    //   // Reset the state to the initial setting
+    // Reset the state to the initial setting
     this.state.clear();
-    //   // Update the visualization
+    // Update the visualization
     this.viz.start();
   },
   handleGraphEvent: function (event) {
