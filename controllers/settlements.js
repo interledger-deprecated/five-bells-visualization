@@ -139,6 +139,8 @@ exports.put = function *(id) {
     settlement.source_transfer = transfers[i];
     settlement.destination_transfer = transfers[i + 1];
 
+    log.info('creating settlement ' + settlement.id);
+
     let settlementReq = yield request({
       method: 'put',
       uri: settlement.id,
