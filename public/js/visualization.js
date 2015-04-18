@@ -95,7 +95,6 @@ export default class Visualization extends EventEmitter {
       .data(this.state.current.nodes, d => d.id);
     this.node.enter().append('circle')
       .attr('class', d => 'node type-' + d.type)
-      .attr('r', d => d.type === 'user' ? 6 : 10)
       .on('click', this.handleNodeClick.bind(this))
       .on('dblclick', Visualization.handleNodeDblClick)
       .call(this.drag);
@@ -111,7 +110,7 @@ export default class Visualization extends EventEmitter {
     this.link = this.linkGroup.selectAll('.link')
       .data(links, d => d.source.id + '-' + d.target.id);
     this.link.enter().append('line')
-      .attr('class', 'link');
+      .attr('class', d => 'link type-' + d.type)
     this.link.exit().remove();
     this.link
       .classed('highlighted',
@@ -159,6 +158,14 @@ export default class Visualization extends EventEmitter {
     this.node
       .attr('cx', d => d.x)
       .attr('cy', d => d.y)
+      .attr('r', d => {
+        if (d.type === 'user') {
+          return 4;
+        } else if (d.type === 'ledger') {
+          return 4 + Math.log(d.count) * 6;
+        }
+        return 10;
+      })
       .style('fill', d => d.color);
 
     this.link

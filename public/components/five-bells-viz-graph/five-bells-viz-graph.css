@@ -11,16 +11,12 @@
 */
 
 .node {
-  fill: #ccc;
+  fill: #666;
   stroke: none;
 }
 
 .node.type-ledger {
-  fill: #5DA5DA;
-}
-
-.node.type-trader {
-  fill: #F15854;
+  fill: #fff;
 }
 
 /*.node.type-five-bells-recipient {
@@ -33,7 +29,12 @@
 
 .link {
   fill: none;
-  stroke: #777;
+  stroke: #666;
+  stroke-width: 1px;
+}
+
+.link.type-trader {
+  stroke: #fff;
   stroke-width: 2px;
 }
 
