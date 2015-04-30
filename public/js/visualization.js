@@ -162,7 +162,7 @@ export default class Visualization extends EventEmitter {
         if (d.type === 'user') {
           return 4;
         } else if (d.type === 'ledger') {
-          return 4 + Math.log(d.count) * 6;
+          return 5 + Math.log(d.count + 1) * 4;
         }
         return 10;
       })
