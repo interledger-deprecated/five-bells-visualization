@@ -71,8 +71,7 @@ exports.put = function *(id) {
 
   // Create final (rightmost) transfer
   let finalTransfer = settlements[settlements.length - 1].destination_transfers[0];
-  finalTransfer.id = query.destination_ledger + '/transfers/' +
-    uuid();
+  finalTransfer.id = query.destination_ledger + '/transfers/' + uuid();
   finalTransfer.partOfSettlement = settlementUri;
 
   log.info('creating final transfer ' + finalTransfer.id);
@@ -88,23 +87,33 @@ exports.put = function *(id) {
     throw new Error('Remote error');
   }
 
+  let finalTransferStateReq = yield request({
+    method: 'get',
+    uri: finalTransfer.id + '/state',
+    json: true
+  });
+  if (finalTransferStateReq.statusCode >= 400) {
+    log.error('Server Error:', finalTransferStateReq.statusCode,
+      finalTransferStateReq.body);
+    throw new Error('Remote error');
+  }
+
   // Execution condition is the final transfer in the chain
   let executionCondition = {
     message_hash: hashJSON({
       id: finalTransfer.id,
-      state: 'completed'
+      state: 'executed'
     }),
     signer: query.destination_ledger,
-    public_key: 'aaa=',
-    algorithm: 'ed25519-sha512'
+    public_key: finalTransferStateReq.body.public_key,
+    algorithm: finalTransferStateReq.body.algorithm
   };
 
   // Prepare remaining transfer objects
   let transfers = [];
   for (let i = settlements.length - 1; i >= 0; i--) {
     let transfer = settlements[i].source_transfers[0];
-    transfer.id = transfer.ledger + '/transfers/' +
-      uuid();
+    transfer.id = transfer.ledger + '/transfers/' + uuid();
     transfer.execution_condition = executionCondition;
     transfer.partOfSettlement = settlementUri;
     transfers.unshift(transfer);
