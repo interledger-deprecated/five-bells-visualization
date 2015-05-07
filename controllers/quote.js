@@ -15,9 +15,8 @@ function formatAmount (amount) {
 exports.get = function *() {
   // TODO: Sanitize this.query
 
-  let source = this.query.source_asset + '/' + this.query.source_ledger;
-  let destination = this.query.destination_asset + '/' +
-    this.query.destination_ledger;
+  let source = this.query.source_ledger;
+  let destination = this.query.destination_ledger;
   let path = pathfinder.findPath(source, destination);
 
   let settlements;
@@ -34,7 +33,7 @@ exports.get = function *() {
   }
 
   this.body = {
-    source_transfer: settlements[0].source_transfer,
-    destination_transfer: settlements.pop().destination_transfer
+    source_transfers: [settlements[0].source_transfers[0]],
+    destination_transfers: [settlements.pop().destination_transfers[0]]
   };
 };
