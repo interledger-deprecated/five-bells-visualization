@@ -62,7 +62,7 @@
   fill: #fdb34d;
 }
 
-.event.state-completed rect {
+.event.state-executed rect {
   fill: #42b186;
 }
 

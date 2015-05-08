@@ -102,7 +102,7 @@ export default class Parser {
     } else {
       notification = {
         id: unique++,
-        related: this.nodes.get(event.detail.host),
+        related: this.nodes.get(event.detail.resource.ledger),
         text: event.detail.resource.state,
         state: event.detail.resource.state,
         offsetX: 0,
@@ -124,7 +124,7 @@ export default class Parser {
     notification.text = event.detail.resource.state;
     notification.state = event.detail.resource.state;
 
-    if (event.detail.resource.state === 'completed') {
+    if (event.detail.resource.state === 'executed') {
       this.state.current.events.delete(notification);
     }
   }

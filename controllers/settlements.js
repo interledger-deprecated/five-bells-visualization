@@ -65,7 +65,7 @@ exports.put = function *(id) {
   // Fill in remaining transfers data
   settlements.reduce(function (left, right) {
     left.destination_transfers[0].credits = right.source_transfers[0].credits;
-    right.source_transfers[0].debits = left.destination_transfer[0].debits;
+    right.source_transfers[0].debits = left.destination_transfers[0].debits;
     return right;
   });
 
@@ -165,11 +165,7 @@ exports.put = function *(id) {
       throw new Error('Remote error');
     }
 
-    // Add the authorization received from the trader
-    // TODO Should be getting this from the trader response?
-    transfers[i + 1].debits[0].authorization = {
-      algorithm: 'ed25519-sha512'
-    };
+    transfers[i + 1] = settlementReq.body.destination_transfers[0];
   }
 
   // console.log(JSON.stringify(settlements, null, 2));
