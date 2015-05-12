@@ -4,6 +4,7 @@
   "description": "Tool to visualize Five Bells logs.",
   "main": "app.js",
   "scripts": {
+    "postinstall": "bower install",
     "start": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -47,5 +48,8 @@
     "strip-ansi": "^2.0.1",
     "uuid4": "^1.0.0"
   },
-  "private": true
+  "private": true,
+  "devDependencies": {
+    "bower": "^1.4.1"
+  }
 }
