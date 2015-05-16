@@ -73,6 +73,9 @@ exports.put = function *(id) {
   let finalTransfer = settlements[settlements.length - 1].destination_transfers[0];
   finalTransfer.id = query.destination_ledger + '/transfers/' + uuid();
   finalTransfer.partOfSettlement = settlementUri;
+  let expiryDate = new Date((new Date()) + finalTransfer.expiry_duration * 1000);
+  finalTransfer.expires_at = expiryDate.toISOString();
+  delete finalTransfer.expiry_duration;
 
   log.info('creating final transfer ' + finalTransfer.id);
   let finalTransferReq = yield request({
@@ -115,7 +118,10 @@ exports.put = function *(id) {
     let transfer = settlements[i].source_transfers[0];
     transfer.id = transfer.ledger + '/transfers/' + uuid();
     transfer.execution_condition = executionCondition;
-    transfer.partOfSettlement = settlementUri;
+    transfer.part_of_settlement = settlementUri;
+    let expiryDate = new Date((new Date()) + transfer.expiry_duration * 1000);
+    transfer.expires_at = expiryDate.toISOString();
+    delete transfer.expiry_duration;
     transfers.unshift(transfer);
   }
 
