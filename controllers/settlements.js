@@ -1,8 +1,8 @@
 'use strict';
 
 const crypto = require('crypto');
-const requestUtil = require('five-bells-shared/utils/request');
-const log = require('five-bells-shared/services/log')('settlements');
+const requestUtil = require('@ripple/five-bells-shared/utils/request');
+const log = require('@ripple/five-bells-shared/services/log')('settlements');
 const pathfinder = require('../services/pathfinder');
 const orchestrator = require('../services/orchestrator');
 const config = require('../services/config');
