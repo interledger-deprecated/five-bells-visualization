@@ -1,12 +1,12 @@
 {
-  "name": "five-bells-visualization",
+  "name": "@ripple/five-bells-visualization",
   "version": "1.0.0",
   "description": "Tool to visualize Five Bells logs.",
   "main": "app.js",
   "scripts": {
     "install": "bower install --allow-root",
     "start": "nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no tests\" && exit 0"
   },
   "repository": {
     "type": "git",
@@ -35,7 +35,7 @@
     "co-foreach": "^1.0.6",
     "co-request": "^0.2.0",
     "co-stream": "^0.1.0",
-    "five-bells-shared": "https://569d9e97620f8ac44643f69afdea08af8ff72a5b@github.com/ripple/five-bells-shared/tarball/v2.0.0",
+    "@ripple/five-bells-shared": "2.6.3",
     "koa": "^0.18.1",
     "koa-mag": "^1.0.4",
     "koa-route": "^2.4.0",
@@ -48,7 +48,6 @@
     "strip-ansi": "^2.0.1",
     "uuid4": "^1.0.0"
   },
-  "private": true,
   "devDependencies": {
     "bower": "^1.4.1"
   }

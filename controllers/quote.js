@@ -1,7 +1,7 @@
 'use strict';
 
 const config = require('../services/config');
-const log = require('five-bells-shared/services/log')('quote');
+const log = require('@ripple/five-bells-shared/services/log')('quote');
 const pathfinder = require('../services/pathfinder');
 const orchestrator = require('../services/orchestrator');
 
