@@ -1,39 +1,31 @@
-'use strict';
+'use strict'
 
-const config = require('../services/config');
-const log = require('@ripple/five-bells-shared/services/log')('quote');
-const pathfinder = require('../services/pathfinder');
-const orchestrator = require('../services/orchestrator');
-
-function formatAmount (amount) {
-  if (typeof amount === 'string') {
-    amount = parseFloat(amount);
-  }
-  return amount.toFixed(2);
-}
+const log = require('@ripple/five-bells-shared/services/log')('quote')
+const pathfinder = require('../services/pathfinder')
+const orchestrator = require('../services/orchestrator')
 
 exports.get = function *() {
   // TODO: Sanitize this.query
 
-  let source = this.query.source_ledger;
-  let destination = this.query.destination_ledger;
-  let path = pathfinder.findPath(source, destination);
+  let source = this.query.source_ledger
+  let destination = this.query.destination_ledger
+  let path = pathfinder.findPath(source, destination)
 
-  let settlements;
+  let settlements
   if (this.query.source_amount) {
-    log.debug('creating quote with fixed source amount');
+    log.debug('creating quote with fixed source amount')
     // XXX
-    throw new Error('not implemented');
+    throw new Error('not implemented')
   } else if (this.query.destination_amount) {
-    log.debug('creating quote with fixed destination amount');
-    settlements = yield orchestrator.quotePathFromDestination(this.query, path);
+    log.debug('creating quote with fixed destination amount')
+    settlements = yield orchestrator.quotePathFromDestination(this.query, path)
   } else {
     // XXX
-    throw new Error();
+    throw new Error()
   }
 
   this.body = {
     source_transfers: [settlements[0].source_transfers[0]],
     destination_transfers: [settlements.pop().destination_transfers[0]]
-  };
-};
+  }
+}

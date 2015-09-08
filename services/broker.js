@@ -1,5 +1,5 @@
-'use strict';
+'use strict'
 
-const Broker = require('../lib/broker').Broker;
+const Broker = require('../lib/broker').Broker
 
-module.exports = new Broker();
+module.exports = new Broker()

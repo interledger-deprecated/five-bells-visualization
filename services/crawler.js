@@ -1,6 +1,6 @@
-'use strict';
+'use strict'
 
-const Crawler = require('../lib/crawler').Crawler;
-const config = require('./config');
+const Crawler = require('../lib/crawler').Crawler
+const config = require('./config')
 
-module.exports = new Crawler(config);
+module.exports = new Crawler(config)
