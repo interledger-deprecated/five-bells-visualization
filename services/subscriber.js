@@ -1,6 +1,6 @@
-'use strict';
+'use strict'
 
-const Subscriber = require('../lib/subscriber').Subscriber;
-const crawler = require('./crawler');
+const Subscriber = require('../lib/subscriber').Subscriber
+const crawler = require('./crawler')
 
-module.exports = new Subscriber(crawler);
+module.exports = new Subscriber(crawler)

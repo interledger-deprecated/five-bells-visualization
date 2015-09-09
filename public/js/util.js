@@ -1,37 +1,36 @@
-
-export function greatestLower(a, gt) {
-  function bs(low, high) {
+export function greatestLower (a, gt) {
+  function bs (low, high) {
     if (high < low) {
-      return low - 1;
+      return low - 1
     }
-    const mid = Math.floor((low + high) / 2);
+    const mid = Math.floor((low + high) / 2)
     if (gt(a[mid])) {
-      return bs(low, mid - 1);
+      return bs(low, mid - 1)
     }
 
-    return bs(mid + 1, high);
+    return bs(mid + 1, high)
   }
-  return bs(0, a.length - 1);
+  return bs(0, a.length - 1)
 }
 
 /**
  * Given a set of nodes, will create bi-directions links between all of them.
  */
-export function interconnectFully(nodes) {
+export function interconnectFully (nodes) {
   nodes.forEach(function (firstNode) {
     if (!Array.isArray(firstNode.advisors)) {
-      firstNode.advisors = [];
+      firstNode.advisors = []
     }
     nodes.forEach(function (secondNode) {
       if (!Array.isArray(secondNode.advisors)) {
-        secondNode.advisors = [];
+        secondNode.advisors = []
       }
       if (firstNode !== secondNode) {
-        firstNode.advisors.push(secondNode);
-        secondNode.advisors.push(firstNode);
+        firstNode.advisors.push(secondNode)
+        secondNode.advisors.push(firstNode)
       }
-    });
-  });
+    })
+  })
 
   // var initialLinks = [
   //   { source: initialNodes[0], target: initialNodes[1], hi: true, lo: true },
@@ -40,7 +39,7 @@ export function interconnectFully(nodes) {
   //   { source: initialNodes[1], target: initialNodes[2], hi: true, lo: true },
   //   { source: initialNodes[1], target: initialNodes[3], hi: true, lo: true },
   //   { source: initialNodes[2], target: initialNodes[3], hi: true, lo: true },
-  // ];
+  // ]
 }
 
 /**
@@ -54,13 +53,13 @@ export function interconnectFully(nodes) {
  *
  *     [ { source: <nodes[0]>, target: <nodes[1]> }]
  */
-export function generateLinks(nodes, traders) {
-  const links = [];
+export function generateLinks (nodes, traders) {
+  const links = []
 
   // For all combinations of nodes
   for (let node of nodes) {
     if (node.type === 'ledger') {
-      node.count = 0;
+      node.count = 0
     }
     if (node.type === 'user') {
       for (let otherNode of nodes) {
@@ -69,33 +68,32 @@ export function generateLinks(nodes, traders) {
             type: 'user',
             source: node,
             target: otherNode
-          });
+          })
         }
       }
     }
   }
 
   for (let node of traders) {
-    let source, target;
+    let source, target
     for (source of nodes) {
       if (source.identity === node.source) {
-        break;
+        break
       }
     }
     for (target of nodes) {
       if (target.identity === node.target) {
-        break;
+        break
       }
     }
-    source.count++;
-    target.count++;
+    source.count++
+    target.count++
     links.push({
       type: 'trader',
       source: source,
       target: target
-    });
+    })
   }
 
-
-  return links;
+  return links
 }

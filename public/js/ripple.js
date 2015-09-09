@@ -1,18 +1,16 @@
-import Network from 'js/network';
+import Network from 'js/network'
 
 export default class Ripple extends Network {
-  constructor() {
-    super();
+  constructor () {
+    super()
 
-    this.proposedSet = [];
-    this.state = 'open';
+    this.proposedSet = []
+    this.state = 'open'
   }
 
-  updateStates(model) {
-    super.updateStates(model);
+  updateStates (model) {
+    super.updateStates(model)
   }
 
-  startConsensus() {
-
-  }
+  startConsensus () {}
 }
