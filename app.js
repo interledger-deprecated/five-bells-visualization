@@ -4,7 +4,7 @@ const app = require('koa')()
 const serve = require('koa-static')
 const route = require('koa-route')
 const co = require('co')
-const log = require('@ripple/five-bells-shared/services/log')
+const log = require('./services/log')
 const logger = require('koa-mag')
 const errorHandler = require('@ripple/five-bells-shared/middlewares/error-handler')
 const notifications = require('./controllers/notifications')
@@ -17,7 +17,7 @@ const broker = require('./services/broker')
 require('./services/subscriber')
 
 app.use(logger())
-app.use(errorHandler)
+app.use(errorHandler({log: log('error-handler')}))
 
 app.use(serve(__dirname + '/public'))
 

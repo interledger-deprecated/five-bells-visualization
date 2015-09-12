@@ -2,7 +2,7 @@
 
 const crypto = require('crypto')
 const requestUtil = require('@ripple/five-bells-shared/utils/request')
-const log = require('@ripple/five-bells-shared/services/log')('settlements')
+const log = require('../services/log')('settlements')
 const pathfinder = require('../services/pathfinder')
 const orchestrator = require('../services/orchestrator')
 const config = require('../services/config')
@@ -72,8 +72,9 @@ exports.put = function *(id) {
   // Create final (rightmost) transfer
   let finalTransfer = settlements[settlements.length - 1].destination_transfers[0]
   finalTransfer.id = query.destination_ledger + '/transfers/' + uuid()
-  finalTransfer.partOfSettlement = settlementUri
-  let expiryDate = new Date((new Date()) + finalTransfer.expiry_duration * 1000)
+  finalTransfer.part_of_settlement = settlementUri
+
+  let expiryDate = new Date(Number(new Date()) + Number(finalTransfer.expiry_duration) * 1000)
   finalTransfer.expires_at = expiryDate.toISOString()
   delete finalTransfer.expiry_duration
 
@@ -119,7 +120,7 @@ exports.put = function *(id) {
     transfer.id = transfer.ledger + '/transfers/' + uuid()
     transfer.execution_condition = executionCondition
     transfer.part_of_settlement = settlementUri
-    let expiryDate = new Date((new Date()) + transfer.expiry_duration * 1000)
+    let expiryDate = new Date(Number(new Date()) + Number(transfer.expiry_duration) * 1000)
     transfer.expires_at = expiryDate.toISOString()
     delete transfer.expiry_duration
     transfers.unshift(transfer)
@@ -127,9 +128,7 @@ exports.put = function *(id) {
 
   // The first transfer must be submitted by us with authorization
   // TODO: This must be a genuine authorization from the user
-  transfers[0].debits[0].authorization = {
-    algorithm: 'ed25519-sha512'
-  }
+  transfers[0].debits[0].authorized = true
 
   // TODO Theoretically we'd need to keep track of the signed responses
   for (let transfer of transfers) {
@@ -139,6 +138,10 @@ exports.put = function *(id) {
       method: 'put',
       uri: transfer.id,
       body: transfer,
+      auth: {
+        username: 'alice',
+        password: 'password'
+      },
       json: true
     })
     if (transferReq.statusCode >= 400) {
