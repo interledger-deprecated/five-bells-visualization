@@ -2,7 +2,7 @@
 
 const crypto = require('crypto');
 const requestUtil = require('@ripple/five-bells-shared/utils/request');
-const log = require('@ripple/five-bells-shared/services/log')('settlements');
+const log = require('@ripple/five-bells-shared/services/log')('payments');
 const pathfinder = require('../services/pathfinder');
 const orchestrator = require('../services/orchestrator');
 const config = require('../services/config');
@@ -18,61 +18,61 @@ function hashJSON(json) {
 
 exports.put = function *(id) {
   requestUtil.validateUriParameter('id', id, 'Uuid');
-  let settlement = yield requestUtil.validateBody(this, 'Settlement');
+  let payment = yield requestUtil.validateBody(this, 'Payment');
 
-  const settlementUri = config.server.base_uri + '/settlements/' + id;
-  if (typeof settlement.id !== 'undefined') {
+  const paymentUri = config.server.base_uri + '/payments/' + id;
+  if (typeof payment.id !== 'undefined') {
     requestUtil.assert.strictEqual(
-      settlement.id,
-      settlementUri,
-      'Settlement ID must match the one in the URL'
+      payment.id,
+      paymentUri,
+      'Payment ID must match the one in the URL'
     );
   }
 
-  settlement.id = id;
+  payment.id = id;
 
-  log.debug('received settlement ID ' + settlement.id);
+  log.debug('received payment ID ' + payment.id);
 
   let query = {
-    source_ledger: settlement.source_transfers[0].ledger,
-    destination_ledger: settlement.destination_transfers[0].ledger,
-    destination_amount: settlement.destination_transfers[0].debits[0].amount
+    source_ledger: payment.source_transfers[0].ledger,
+    destination_ledger: payment.destination_transfers[0].ledger,
+    destination_amount: payment.destination_transfers[0].debits[0].amount
   };
 
   let source = query.source_ledger;
   let destination = query.destination_ledger;
-  let path = settlement.path = pathfinder.findPath(source, destination);
+  let path = payment.path = pathfinder.findPath(source, destination);
 
-  let settlements;
+  let payments;
   if (query.source_amount) {
-    log.debug('creating settlement with fixed source amount');
+    log.debug('creating payment with fixed source amount');
     // XXX
     throw new Error('not implemented');
   } else if (query.destination_amount) {
-    log.debug('creating settlement with fixed destination amount');
-    settlements = yield orchestrator.quotePathFromDestination(query, path);
+    log.debug('creating payment with fixed destination amount');
+    payments = yield orchestrator.quotePathFromDestination(query, path);
   } else {
     // XXX
     throw new Error();
   }
 
-  // Add start and endpoints in settlement chain from user-provided settlement
+  // Add start and endpoints in payment chain from user-provided payment
   // object
-  settlements[0].source_transfers[0].debits = settlement.source_transfers[0].debits;
-  settlements[settlements.length - 1].destination_transfers[0].credits =
-    settlement.destination_transfers[0].credits;
+  payments[0].source_transfers[0].debits = payment.source_transfers[0].debits;
+  payments[payments.length - 1].destination_transfers[0].credits =
+    payment.destination_transfers[0].credits;
 
   // Fill in remaining transfers data
-  settlements.reduce(function (left, right) {
+  payments.reduce(function (left, right) {
     left.destination_transfers[0].credits = right.source_transfers[0].credits;
     right.source_transfers[0].debits = left.destination_transfers[0].debits;
     return right;
   });
 
   // Create final (rightmost) transfer
-  let finalTransfer = settlements[settlements.length - 1].destination_transfers[0];
+  let finalTransfer = payments[payments.length - 1].destination_transfers[0];
   finalTransfer.id = query.destination_ledger + '/transfers/' + uuid();
-  finalTransfer.partOfSettlement = settlementUri;
+  finalTransfer.partOfPayment = paymentUri;
   let expiryDate = new Date((new Date()) + finalTransfer.expiry_duration * 1000);
   finalTransfer.expires_at = expiryDate.toISOString();
   delete finalTransfer.expiry_duration;
@@ -114,11 +114,11 @@ exports.put = function *(id) {
 
   // Prepare remaining transfer objects
   let transfers = [];
-  for (let i = settlements.length - 1; i >= 0; i--) {
-    let transfer = settlements[i].source_transfers[0];
+  for (let i = payments.length - 1; i >= 0; i--) {
+    let transfer = payments[i].source_transfers[0];
     transfer.id = transfer.ledger + '/transfers/' + uuid();
     transfer.execution_condition = executionCondition;
-    transfer.part_of_settlement = settlementUri;
+    transfer.part_of_payment = paymentUri;
     let expiryDate = new Date((new Date()) + transfer.expiry_duration * 1000);
     transfer.expires_at = expiryDate.toISOString();
     delete transfer.expiry_duration;
@@ -153,36 +153,36 @@ exports.put = function *(id) {
 
   transfers.push(finalTransfer);
 
-  for (let i = 0; i < settlements.length; i++) {
-    let settlement = settlements[i];
-    settlement.source_transfers = [transfers[i]];
-    settlement.destination_transfers = [transfers[i + 1]];
+  for (let i = 0; i < payments.length; i++) {
+    let payment = payments[i];
+    payment.source_transfers = [transfers[i]];
+    payment.destination_transfers = [transfers[i + 1]];
 
-    log.info('creating settlement ' + settlement.id);
+    log.info('creating payment ' + payment.id);
 
-    let settlementReq = yield request({
+    let paymentReq = yield request({
       method: 'put',
-      uri: settlement.id,
-      body: settlement,
+      uri: payment.id,
+      body: payment,
       json: true
     });
-    if (settlementReq.statusCode >= 400) {
-      log.error('Server Error:', settlementReq.statusCode, settlementReq.body);
+    if (paymentReq.statusCode >= 400) {
+      log.error('Server Error:', paymentReq.statusCode, paymentReq.body);
       throw new Error('Remote error');
     }
 
-    transfers[i + 1] = settlementReq.body.destination_transfers[0];
+    transfers[i + 1] = paymentReq.body.destination_transfers[0];
   }
 
-  // console.log(JSON.stringify(settlements, null, 2));
+  // console.log(JSON.stringify(payments, null, 2));
   // console.log(JSON.stringify(transfers, null, 2));
 
   // Externally we want to use full URIs as IDs
-  settlement.id = settlementUri;
+  payment.id = paymentUri;
 
-  exports.emit('settlement', settlement);
+  exports.emit('payment', payment);
 
-  this.body = settlement;
+  this.body = payment;
 };
 
 emitter(exports);
