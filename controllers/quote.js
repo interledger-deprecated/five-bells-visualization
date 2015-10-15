@@ -1,16 +1,7 @@
 'use strict';
 
-const config = require('../services/config');
 const log = require('@ripple/five-bells-shared/services/log')('quote');
 const pathfinder = require('../services/pathfinder');
-const orchestrator = require('../services/orchestrator');
-
-function formatAmount (amount) {
-  if (typeof amount === 'string') {
-    amount = parseFloat(amount);
-  }
-  return amount.toFixed(2);
-}
 
 exports.get = function *() {
   // TODO: Sanitize this.query
@@ -26,7 +17,7 @@ exports.get = function *() {
     throw new Error('not implemented');
   } else if (this.query.destination_amount) {
     log.debug('creating quote with fixed destination amount');
-    payments = yield orchestrator.quotePathFromDestination(this.query, path);
+    payments = yield pathfinder.quotePathFromDestination(this.query, path);
   } else {
     // XXX
     throw new Error();
