@@ -98,6 +98,9 @@ export default class Visualization extends EventEmitter {
       .on('click', this.handleNodeClick.bind(this))
       .on('dblclick', Visualization.handleNodeDblClick)
       .call(this.drag);
+    this.node
+      .append('title')
+      .text(d => d.identity);
     this.node.exit().remove();
     this.node
       .classed('fixed', d => d.fixed)
