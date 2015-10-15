@@ -19,21 +19,21 @@ exports.get = function *() {
   let destination = this.query.destination_ledger;
   let path = pathfinder.findPath(source, destination);
 
-  let settlements;
+  let payments;
   if (this.query.source_amount) {
     log.debug('creating quote with fixed source amount');
     // XXX
     throw new Error('not implemented');
   } else if (this.query.destination_amount) {
     log.debug('creating quote with fixed destination amount');
-    settlements = yield orchestrator.quotePathFromDestination(this.query, path);
+    payments = yield orchestrator.quotePathFromDestination(this.query, path);
   } else {
     // XXX
     throw new Error();
   }
 
   this.body = {
-    source_transfers: [settlements[0].source_transfers[0]],
-    destination_transfers: [settlements.pop().destination_transfers[0]]
+    source_transfers: [payments[0].source_transfers[0]],
+    destination_transfers: [payments.pop().destination_transfers[0]]
   };
 };

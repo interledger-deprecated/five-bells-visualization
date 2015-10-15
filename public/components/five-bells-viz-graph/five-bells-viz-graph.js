@@ -108,7 +108,7 @@ Polymer('five-bells-viz-graph', {
   handleGraphEvent: function (event) {
     this.queueEvent(event.detail.msg);
   },
-  selectSettlement: function (settlement) {
-    this.highlighter.selectSettlement(settlement);
+  selectPayment: function (payment) {
+    this.highlighter.selectPayment(payment);
   }
 });

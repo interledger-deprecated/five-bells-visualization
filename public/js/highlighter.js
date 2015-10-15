@@ -4,13 +4,13 @@ export default class Highlighter {
     this.viz = viz;
   }
 
-  selectSettlement(settlement) {
+  selectPayment(payment) {
     const offset = 50;
-    const sender = settlement.source_transfer.debits[0].account + '@' +
-      settlement.source_transfer.debits[0].ledger;
-    const recipient = settlement.destination_transfer.credits[0].account + '@' +
-      settlement.destination_transfer.credits[0].ledger;
-    console.log('tap', settlement);
+    const sender = payment.source_transfer.debits[0].account + '@' +
+      payment.source_transfer.debits[0].ledger;
+    const recipient = payment.destination_transfer.credits[0].account + '@' +
+      payment.destination_transfer.credits[0].ledger;
+    console.log('tap', payment);
     console.log('sender', sender);
     console.log('recipient', recipient);
     const senderNode = this.parser.getNode(sender);
@@ -25,12 +25,12 @@ export default class Highlighter {
     recipientNode.x = recipientNode.px = window.innerWidth - offset;
     recipientNode.y = recipientNode.py = window.innerHeight / 2;
 
-    const events = this.parser.getEventsBySettlement(settlement.id);
+    const events = this.parser.getEventsByPayment(payment.id);
     const affectedHosts = new Set();
     for (let event of events) {
       affectedHosts.add(event.detail.host);
     }
-    settlement.path.reduce((left, right) => {
+    payment.path.reduce((left, right) => {
       let leftWithoutAsset = left.split('/').slice(1).join('/');
       let rightWithoutAsset = right.split('/').slice(1).join('/');
       affectedHosts.add((leftWithoutAsset < rightWithoutAsset) ?
@@ -45,7 +45,7 @@ export default class Highlighter {
       }
     }
 
-    console.log('settlement events', events);
+    console.log('payment events', events);
     console.log('affected hosts', affectedHosts);
 
     this.viz.updateNodes();

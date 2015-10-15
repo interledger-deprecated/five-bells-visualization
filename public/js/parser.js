@@ -5,7 +5,7 @@ export default class Parser {
     this.state = state;
     this.nodes = new Map();
     this.events = new Map();
-    this.eventsBySettlement = new Map();
+    this.eventsByPayment = new Map();
     this.queue = [];
     this.queueTimer = null;
   }
@@ -23,8 +23,8 @@ export default class Parser {
     return this.nodes.get(nodeId);
   }
 
-  getEventsBySettlement(settlementId) {
-    return this.eventsBySettlement.get(settlementId);
+  getEventsByPayment(paymentId) {
+    return this.eventsByPayment.get(paymentId);
   }
 
   parseEvent(event) {
@@ -112,14 +112,14 @@ export default class Parser {
       this.state.current.events.add(notification);
     }
 
-    let settlementEvents, settlementId = event.detail.resource.partOfSettlement;
-    if (this.eventsBySettlement.has(settlementId)) {
-      settlementEvents = this.eventsBySettlement.get(settlementId);
+    let paymentEvents, paymentId = event.detail.resource.partOfPayment;
+    if (this.eventsByPayment.has(paymentId)) {
+      paymentEvents = this.eventsByPayment.get(paymentId);
     } else {
-      settlementEvents = new Set();
-      this.eventsBySettlement.set(settlementId, settlementEvents);
+      paymentEvents = new Set();
+      this.eventsByPayment.set(paymentId, paymentEvents);
     }
-    settlementEvents.add(event);
+    paymentEvents.add(event);
 
     notification.text = event.detail.resource.state;
     notification.state = event.detail.resource.state;

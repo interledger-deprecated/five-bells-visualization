@@ -14,7 +14,7 @@ const errorHandler = require('@ripple/five-bells-shared/middlewares/error-handle
 const bells = require('@ripple/five-bells-shared/middlewares/bells');
 const notifications = require('./controllers/notifications');
 const quote = require('./controllers/quote');
-const settlements = require('./controllers/settlements');
+const payments = require('./controllers/payments');
 const ledgers = require('./controllers/ledgers');
 const config = require('./services/config');
 const crawler = require('./services/crawler');
@@ -29,7 +29,7 @@ app.use(serve(__dirname + '/public'));
 app.use(route.post('/notifications', notifications.post));
 
 app.use(route.get('/quote', quote.get));
-app.use(route.put('/settlements/:uuid', settlements.put));
+app.use(route.put('/payments/:uuid', payments.put));
 
 app.use(route.get('/ledgers', ledgers.list));
 
@@ -55,10 +55,10 @@ notifications.on('notification', function (notification) {
   });
 });
 
-settlements.on('settlement', function (settlement) {
-  io.emit('settlement', {
-    type: 'settlement',
-    detail: settlement
+payments.on('payment', function (payment) {
+  io.emit('payment', {
+    type: 'payment',
+    detail: payment
   });
 });
 // crawler.on('trader', function (detail) {

@@ -8,16 +8,16 @@
     <link rel="stylesheet" href="five-bells-viz-history.css">
     <section layout class="history" relative>
       <paper-shadow z="1" fit></paper-shadow>
-      <template repeat="{{settlement in settlements}}">
+      <template repeat="{{payment in payments}}">
         <div layout horizontal class="entry" center on-tap="{{handleHistoryEntryTap}}">
           <core-icon icon="payment"></core-icon>
-          <div>{{settlement.source_transfer.debits[0].account}}</div>
+          <div>{{payment.source_transfer.debits[0].account}}</div>
           <core-icon icon="arrow-forward"></core-icon>
-          <div flex>{{settlement.destination_transfer.credits[0].account}}</div>
+          <div flex>{{payment.destination_transfer.credits[0].account}}</div>
         </div>
       </template>
     </section>
-    <socket-io autoConnect listenTo=["settlement"] on-s-io-settlement="{{handleSettlement}}"></socket-io>
+    <socket-io autoConnect listenTo=["payment"] on-s-io-payment="{{handlePayment}}"></socket-io>
   </template>
 
   <script>
