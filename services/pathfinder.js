@@ -1,6 +1,8 @@
 'use strict';
 
-const Pathfinder = require('../lib/pathfinder').Pathfinder;
-const crawler = require('./crawler');
+const Pathfinder = require('@ripple/five-bells-pathfind').Pathfinder;
+const config = require('./config');
 
-module.exports = new Pathfinder(crawler);
+const pathfinder = new Pathfinder(config);
+
+module.exports = pathfinder;

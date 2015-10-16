@@ -4,7 +4,6 @@ const crypto = require('crypto');
 const requestUtil = require('@ripple/five-bells-shared/utils/request');
 const log = require('@ripple/five-bells-shared/services/log')('payments');
 const pathfinder = require('../services/pathfinder');
-const orchestrator = require('../services/orchestrator');
 const config = require('../services/config');
 const uuid = require('uuid4');
 const request = require('co-request');
@@ -50,7 +49,7 @@ exports.put = function *(id) {
     throw new Error('not implemented');
   } else if (query.destination_amount) {
     log.debug('creating payment with fixed destination amount');
-    payments = yield orchestrator.quotePathFromDestination(query, path);
+    payments = yield pathfinder.quotePathFromDestination(query, path);
   } else {
     // XXX
     throw new Error();

@@ -1,7 +1,7 @@
 'use strict';
 
-const crawler = require('../services/crawler');
+const pathfinder = require('../services/pathfinder');
 
 exports.list = function *() {
-  this.body = crawler.getLedgers();
+  this.body = pathfinder.getLedgers();
 };
