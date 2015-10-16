@@ -1,11 +1,23 @@
 machine:
-  pre:
-    - curl https://raw.githubusercontent.com/creationix/nvm/v0.23.3/install.sh | bash
   node:
-    version: iojs-2.0.2
+    version: 4.0.0
+test:
+  override:
+    # Run lint
+    - npm run lint
+    # Run tests with coverage
+    #- npm test --coverage -- -R spec-xunit-file
+    # Extract test artifacts
+    #- cp xunit.xml ${CIRCLE_TEST_REPORTS}/deployment:
 deployment:
   production:
     branch: master
     commands:
+      # Upload coverage data
+      #- npm run coveralls
+      # Push NPM package if not yet published
       - mv npmrc-env .npmrc
       - if [ -z "$(npm info $(npm ls --depth=-1 2>/dev/null | head -1 | cut -f 1 -d " ") 2>/dev/null)" ] ; then npm publish ; fi
+general:
+  artifacts:
+    - "coverage/lcov-report"
