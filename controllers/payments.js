@@ -2,7 +2,7 @@
 
 const crypto = require('crypto')
 const requestUtil = require('@ripple/five-bells-shared/utils/request')
-const log = require('@ripple/five-bells-shared/services/log')('payments')
+const log = require('../services/log')('payments')
 const pathfinder = require('../services/pathfinder')
 const config = require('../services/config')
 const uuid = require('uuid4')

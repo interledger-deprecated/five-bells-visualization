@@ -1,6 +1,6 @@
 'use strict'
 
-const log = require('@ripple/five-bells-shared/services/log')('quote')
+const log = require('../services/log')('quote')
 const pathfinder = require('../services/pathfinder')
 
 exports.get = function *() {
