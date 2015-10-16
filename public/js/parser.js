@@ -1,72 +1,70 @@
-
-let unique = 0;
+let unique = 0
 export default class Parser {
-  constructor(state) {
-    this.state = state;
-    this.nodes = new Map();
-    this.events = new Map();
-    this.eventsByPayment = new Map();
-    this.queue = [];
-    this.queueTimer = null;
+  constructor (state) {
+    this.state = state
+    this.nodes = new Map()
+    this.events = new Map()
+    this.eventsByPayment = new Map()
+    this.queue = []
+    this.queueTimer = null
   }
 
-  receiveEvent(event) {
-    event.id = seq++;
-    this.queue.push(event);
-    this.processQueue();
+  receiveEvent (event) {
+    event.id = unique++
+    this.queue.push(event)
+    this.processQueue()
   }
 
-  processQueue() {
+  processQueue () {}
+
+  getNode (nodeId) {
+    return this.nodes.get(nodeId)
   }
 
-  getNode(nodeId) {
-    return this.nodes.get(nodeId);
+  getEventsByPayment (paymentId) {
+    return this.eventsByPayment.get(paymentId)
   }
 
-  getEventsByPayment(paymentId) {
-    return this.eventsByPayment.get(paymentId);
-  }
-
-  parseEvent(event) {
+  parseEvent (event) {
     switch (event.type) {
       case 'ledger':
-        this.parseLedgerEvent(event);
-        break;
+        this.parseLedgerEvent(event)
+        break
       case 'trader':
-        this.parseTraderEvent(event);
-        break;
+        this.parseTraderEvent(event)
+        break
       case 'user':
-        this.parseUserEvent(event);
-        break;
+        this.parseUserEvent(event)
+        break
       case 'notification':
-        this.parseNotificationEvent(event);
-        break;
+        this.parseNotificationEvent(event)
+        break
       default:
-        // console.log('Unknown event', event);
+    // console.log('Unknown event', event)
     }
   }
 
-  parseLedgerEvent(event) {
+  parseLedgerEvent (event) {
     if (this.nodes.has(event.detail.id)) {
-      return;
+      return
     }
 
     const node = {
       id: unique++,
       type: 'ledger',
       identity: event.detail.id
-    };
-    this.nodes.set(event.detail.id, node);
-    this.state.current.nodes.push(node);
+    }
+    this.nodes.set(event.detail.id, node)
+    this.state.current.nodes.push(node)
   }
 
-  parseTraderEvent(event) {
-    const nodeId = (event.detail.source < event.detail.destination) ?
-      event.detail.source + ';' + event.detail.destination :
-      event.detail.destination + ';' + event.detail.source;
+  parseTraderEvent (event) {
+    const nodeId = (event.detail.source < event.detail.destination)
+      ? event.detail.source + ';' + event.detail.destination
+      : event.detail.destination + ';' + event.detail.source
 
     if (this.nodes.has(nodeId)) {
-      return;
+      return
     }
 
     const node = {
@@ -75,14 +73,14 @@ export default class Parser {
       identity: nodeId,
       source: event.detail.source,
       target: event.detail.destination
-    };
-    this.nodes.set(nodeId, node);
-    this.state.current.traders.push(node);
+    }
+    this.nodes.set(nodeId, node)
+    this.state.current.traders.push(node)
   }
 
-  parseUserEvent(event) {
+  parseUserEvent (event) {
     if (this.nodes.has(event.detail.id)) {
-      return;
+      return
     }
 
     const node = {
@@ -90,15 +88,15 @@ export default class Parser {
       type: 'user',
       identity: event.detail.id,
       ledger: event.detail.ledger
-    };
-    this.nodes.set(event.detail.id, node);
-    this.state.current.nodes.push(node);
+    }
+    this.nodes.set(event.detail.id, node)
+    this.state.current.nodes.push(node)
   }
 
-  parseNotificationEvent(event) {
-    let notification;
+  parseNotificationEvent (event) {
+    let notification
     if (this.events.has(event.detail.resource.id)) {
-      notification = this.events.get(event.detail.resource.id);
+      notification = this.events.get(event.detail.resource.id)
     } else {
       notification = {
         id: unique++,
@@ -107,25 +105,26 @@ export default class Parser {
         state: event.detail.resource.state,
         offsetX: 0,
         offsetY: -20
-      };
-      this.events.set(event.detail.resource.id, notification);
-      this.state.current.events.add(notification);
+      }
+      this.events.set(event.detail.resource.id, notification)
+      this.state.current.events.add(notification)
     }
 
-    let paymentEvents, paymentId = event.detail.resource.partOfPayment;
+    let paymentEvents
+    const paymentId = event.detail.resource.partOfPayment
     if (this.eventsByPayment.has(paymentId)) {
-      paymentEvents = this.eventsByPayment.get(paymentId);
+      paymentEvents = this.eventsByPayment.get(paymentId)
     } else {
-      paymentEvents = new Set();
-      this.eventsByPayment.set(paymentId, paymentEvents);
+      paymentEvents = new Set()
+      this.eventsByPayment.set(paymentId, paymentEvents)
     }
-    paymentEvents.add(event);
+    paymentEvents.add(event)
 
-    notification.text = event.detail.resource.state;
-    notification.state = event.detail.resource.state;
+    notification.text = event.detail.resource.state
+    notification.state = event.detail.resource.state
 
     if (event.detail.resource.state === 'executed') {
-      this.state.current.events.delete(notification);
+      this.state.current.events.delete(notification)
     }
   }
 }

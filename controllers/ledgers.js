@@ -1,7 +1,7 @@
-'use strict';
+'use strict'
 
-const pathfinder = require('../services/pathfinder');
+const pathfinder = require('../services/pathfinder')
 
 exports.list = function *() {
-  this.body = pathfinder.getLedgers();
-};
+  this.body = pathfinder.getLedgers()
+}
