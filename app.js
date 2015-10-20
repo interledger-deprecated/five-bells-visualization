@@ -25,7 +25,7 @@ app.use(serve(__dirname + '/public'))
 app.use(route.post('/notifications', notifications.post))
 
 app.use(route.get('/quote', quote.get))
-app.use(route.put('/payments/:uuid', payments.put))
+app.use(route.put('/payments', payments.put))
 
 app.use(route.get('/ledgers', ledgers.list))
 
@@ -42,12 +42,6 @@ notifications.on('notification', function (notification) {
   })
 })
 
-payments.on('payment', function (payment) {
-  io.emit('payment', {
-    type: 'payment',
-    detail: payment
-  })
-})
 // crawler.on('trader', function (detail) {
 //   broker.emit({
 //     type: 'trader',
