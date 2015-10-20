@@ -13,6 +13,7 @@ const payments = require('./controllers/payments')
 const ledgers = require('./controllers/ledgers')
 const config = require('./services/config')
 const pathfinder = require('./services/pathfinder')
+const broker = require('./services/broker')
 // const crawler = require('./services/crawler')
 // const broker = require('./services/broker')
 
@@ -31,7 +32,7 @@ app.use(route.get('/ledgers', ledgers.list))
 const server = require('http').createServer(app.callback())
 const io = require('socket.io')(server)
 
-pathfinder.setBroadcaster(io)
+broker.setBroadcaster(io)
 
 notifications.on('notification', function (notification) {
   // We don't need these to be persistent, so we bypass the broker
