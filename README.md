@@ -2,12 +2,4 @@
 
 > A simple visualization for Interledger payments
 
-## Usage
-
-``` sh
-npm install @ripple/five-bells-visualization
-```
-
-``` js
-// TODO Add usage info
-```
+You can see the visualization in action as part of the [`five-bells-demo`](https://github.com/ripple/five-bells-demo)!
