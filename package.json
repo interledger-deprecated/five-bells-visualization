@@ -33,7 +33,6 @@
     "@ripple/five-bells-shared": "7.0.0",
     "byline": "^4.2.1",
     "co": "^4.6.0",
-    "co-body": "^4.0.0",
     "co-each": "^0.1.0",
     "co-emitter": "^0.2.3",
     "co-foreach": "^1.0.7",
