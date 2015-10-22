@@ -14,6 +14,7 @@ const ledgers = require('./controllers/ledgers')
 const config = require('./services/config')
 const pathfinder = require('./services/pathfinder')
 const broker = require('./services/broker')
+const bodyParser = require('koa-bodyparser')
 // const crawler = require('./services/crawler')
 // const broker = require('./services/broker')
 
@@ -21,6 +22,7 @@ app.use(logger())
 app.use(errorHandler({log: log('error-handler')}))
 
 app.use(serve(__dirname + '/public'))
+app.use(bodyParser())
 
 app.use(route.post('/notifications', notifications.post))
 
