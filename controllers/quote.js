@@ -8,7 +8,6 @@ exports.get = function *() {
 
   let source = this.query.source_ledger
   let destination = this.query.destination_ledger
-  let path = pathfinder.findPath(source, destination)
 
   let payments
   if (this.query.source_amount) {
@@ -17,7 +16,8 @@ exports.get = function *() {
     throw new Error('not implemented')
   } else if (this.query.destination_amount) {
     log.debug('creating quote with fixed destination amount')
-    payments = yield pathfinder.quotePathFromDestination(this.query, path)
+    payments = yield pathfinder.findPath(source, destination,
+      this.query.destination_amount)
   } else {
     // XXX
     throw new Error()
