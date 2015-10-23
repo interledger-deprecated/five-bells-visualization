@@ -199,6 +199,7 @@ export default class Visualization extends EventEmitter {
   }
 
   handleNodeClick (d) {
+    if (d3.event.defaultPrevented) return
     this.emit('nodeClick', d)
   }
   handleNodeDblClick (d) {
