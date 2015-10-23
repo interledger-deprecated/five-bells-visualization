@@ -88,6 +88,8 @@ export function generateLinks (nodes, traders) {
     }
     source.count++
     target.count++
+    source.radius = 20 + Math.log(source.count + 1) * 36
+    target.radius = 20 + Math.log(target.count + 1) * 36
     links.push({
       type: 'trader',
       source: source,

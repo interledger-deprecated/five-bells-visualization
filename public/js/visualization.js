@@ -20,10 +20,12 @@ export default class Visualization extends EventEmitter {
       .attr('height', this.height)
 
     this.force = d3.layout.force()
-      .charge(-100)
-      .gravity(0.01)
-      .linkStrength(d => (d.source.highlighted && d.target.highlighted) ? 10 : 1)
-      .linkDistance(d => (d.source.highlighted && d.target.highlighted) ? 0 : 50)
+      .charge(-1000)
+      .chargeDistance(500)
+      // .charge(function (d, i) { return i ? 0 : -2000 })
+      .gravity(0.05)
+      .linkStrength(0.20)
+      // .linkDistance(d => (d.source.highlighted && d.target.highlighted) ? 0 : 130)
       .size([this.width, this.height])
       .nodes(this.state.current.nodes)
       .links(generateLinks(this.state.current.nodes,
@@ -33,10 +35,10 @@ export default class Visualization extends EventEmitter {
       .on('dragstart', Visualization.handleNodeDragStart)
 
     // Create the SVG groups
-    this.linkGroup = this.svg.append('g').attr('id', 'linkGroup')
     this.arrowheadGroup = this.svg.append('g').attr('id', 'arrowheadGroup')
     this.messageGroup = this.svg.append('g').attr('id', 'messageGroup')
     this.nodeGroup = this.svg.append('g').attr('id', 'nodeGroup')
+    this.linkGroup = this.svg.append('g').attr('id', 'linkGroup')
     this.eventGroup = this.svg.append('g').attr('id', 'eventGroup')
 
     // Create the arrowhead path
@@ -96,8 +98,8 @@ export default class Visualization extends EventEmitter {
       .on('click', this.handleNodeClick.bind(this))
       .on('dblclick', Visualization.handleNodeDblClick)
       .call(this.drag)
-    this.node
       .append('title')
+    this.node
       .text(d => d.identity)
     this.node.exit().remove()
     this.node
@@ -156,6 +158,11 @@ export default class Visualization extends EventEmitter {
   }
 
   tick () {
+    const q = d3.geom.quadtree(this.state.current.nodes)
+    for (let node of this.state.current.nodes) {
+      q.visit(Visualization.collide(node))
+    }
+
     this.node
       .attr('cx', d => d.x)
       .attr('cy', d => d.y)
@@ -163,7 +170,7 @@ export default class Visualization extends EventEmitter {
         if (d.type === 'user') {
           return 4
         } else if (d.type === 'ledger') {
-          return 5 + Math.log(d.count + 1) * 4
+          return d.radius * 1.2
         }
         return 10
       })
@@ -196,6 +203,30 @@ export default class Visualization extends EventEmitter {
         pos = Math.max(0, Math.min(1, pos))
         return d.source.y + (d.target.y - d.source.y) * pos
       })
+  }
+
+  static collide (node) {
+    const r = node.radius + 16
+    const nx1 = node.x - r
+    const nx2 = node.x + r
+    const ny1 = node.y - r
+    const ny2 = node.y + r
+    return function (quad, x1, y1, x2, y2) {
+      if (quad.point && (quad.point !== node)) {
+        let x = node.x - quad.point.x
+        let y = node.y - quad.point.y
+        let l = Math.sqrt(x * x + y * y)
+        const r = node.radius + quad.point.radius
+        if (l < r) {
+          l = (l - r) / l * 0.5
+          node.x -= x *= l
+          node.y -= y *= l
+          quad.point.x += x
+          quad.point.y += y
+        }
+      }
+      return x1 > nx2 || x2 < nx1 || y1 > ny2 || y2 < ny1
+    }
   }
 
   handleNodeClick (d) {

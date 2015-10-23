@@ -16,7 +16,23 @@
 }
 
 .node.type-ledger {
-  fill: #fff;
+  opacity: 0.7;
+}
+
+.node.type-ledger:nth-child(4n) {
+  fill: #bbceb0;
+}
+
+.node.type-ledger:nth-child(4n+1) {
+  fill: #8f6a61;
+}
+
+.node.type-ledger:nth-child(4n+2) {
+  fill: #649990;
+}
+
+.node.type-ledger:nth-child(4n+3) {
+  fill: #516667;
 }
 
 /*.node.type-five-bells-recipient {
@@ -35,7 +51,7 @@
 
 .link.type-trader {
   stroke: #fff;
-  stroke-width: 2px;
+  stroke-width: 1px;
 }
 
 .node.fixed {
@@ -64,6 +80,10 @@
 
 .event.state-executed rect {
   fill: #42b186;
+}
+
+.event.state-rejected rect {
+  fill: #F15854;
 }
 
 .event text {

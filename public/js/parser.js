@@ -34,7 +34,7 @@ export default class Parser {
         this.parseTraderEvent(event)
         break
       case 'user':
-        this.parseUserEvent(event)
+        // this.parseUserEvent(event)
         break
       case 'notification':
         this.parseNotificationEvent(event)
@@ -52,7 +52,10 @@ export default class Parser {
     const node = {
       id: unique++,
       type: 'ledger',
-      identity: event.detail.id
+      identity: event.detail.id,
+      radius: 1,
+      x: unique,
+      y: unique
     }
     this.nodes.set(event.detail.id, node)
     this.state.current.nodes.push(node)
@@ -123,7 +126,8 @@ export default class Parser {
     notification.text = event.detail.resource.state
     notification.state = event.detail.resource.state
 
-    if (event.detail.resource.state === 'executed') {
+    if (event.detail.resource.state === 'executed' ||
+        event.detail.resource.state === 'rejected') {
       this.state.current.events.delete(notification)
     }
   }
