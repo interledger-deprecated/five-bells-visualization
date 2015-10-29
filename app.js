@@ -4,6 +4,7 @@ const app = require('koa')()
 const serve = require('koa-static')
 const route = require('koa-route')
 const co = require('co')
+const defer = require('co-defer')
 const log = require('./services/log')
 const logger = require('koa-mag')
 const errorHandler = require('@ripple/five-bells-shared/middlewares/error-handler')
@@ -58,7 +59,9 @@ if (!module.parent) {
       config.server.port)
     log('app').info('public at ' + config.server.base_uri)
 
+    // Crawl the graph of ledgers and connectors
     yield pathfinder.crawl()
+    defer.setInterval(pathfinder.crawl, config.crawler.recrawlInterval)
   }).catch(function (err) {
     console.error(typeof err === 'object' && err.stack ? err.stack : err)
   })

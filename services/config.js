@@ -11,6 +11,10 @@ if (process.env.CRAWLER_INITIAL) {
     config.crawler.initialNodes.push(node)
   })
 }
+config.crawler.recrawlInterval = 60000
+if (process.env.VISUALIZATION_RECRAWL_INTERVAL) {
+  config.crawler.recrawlInterval = parseInt(process.env.VISUALIZATION_RECRAWL_INTERVAL, 10)
+}
 
 config.server = {}
 config.server.secure = false
