@@ -5,10 +5,16 @@ const url = require('url')
 const config = exports
 
 config.crawler = {}
-config.crawler.initialNodes = []
-if (process.env.CRAWLER_INITIAL) {
-  process.env.CRAWLER_INITIAL.split(';').forEach(function (node) {
-    config.crawler.initialNodes.push(node)
+config.crawler.initialLedgers = []
+config.crawler.initialTraders = []
+if (process.env.CRAWLER_INITIAL_LEDGERS) {
+  process.env.CRAWLER_INITIAL_LEDGERS.split(';').forEach(function (uri) {
+    config.crawler.initialLedgers.push(uri)
+  })
+}
+if (process.env.CRAWLER_INITIAL_TRADERS) {
+  process.env.CRAWLER_INITIAL_TRADERS.split(';').forEach(function (uri) {
+    config.crawler.initialTraders.push(uri)
   })
 }
 config.crawler.recrawlInterval = 60000
@@ -24,7 +30,7 @@ config.server.public_host = process.env.HOSTNAME || require('os').hostname()
 config.server.public_port = process.env.PUBLIC_PORT || config.server.port
 
 if (process.env.NODE_ENV === 'test') {
-  config.crawler.initialNodes.push('localhost:3001')
+  config.crawler.initialLedgers.push('localhost:3001')
 }
 
 // Calculate base_uri
