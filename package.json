@@ -1,6 +1,6 @@
 {
   "name": "@ripple/five-bells-visualization",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "description": "Tool to visualize Five Bells logs.",
   "main": "app.js",
   "scripts": {
