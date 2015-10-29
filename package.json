@@ -28,7 +28,7 @@
   },
   "homepage": "https://github.com/ripple/five-bells-visualization",
   "dependencies": {
-    "@ripple/five-bells-pathfind": "~3.0.2",
+    "@ripple/five-bells-pathfind": "~3.1.0",
     "@ripple/five-bells-sender": "2.0.1",
     "@ripple/five-bells-shared": "7.0.0",
     "byline": "^4.2.1",
