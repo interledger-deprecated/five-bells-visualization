@@ -7,4 +7,4 @@
 
 > A simple visualization for Interledger payments
 
-You can see the visualization in action as part of the [`five-bells-demo`](https://github.com/ripple/five-bells-demo)!
+You can see the visualization in action as part of the [`five-bells-demo`](https://github.com/interledger/five-bells-demo)!
