@@ -1,4 +1,9 @@
-# Five Bells Visualization [![Circle CI](https://circleci.com/gh/ripple/five-bells-visualization/tree/master.svg?style=svg&circle-token=8ffc14cef3abfa45938a1fdd83c0ed6b9b82b419)](https://circleci.com/gh/ripple/five-bells-visualization/tree/master)
+# Five Bells Visualization [![npm][npm-image]][npm-url] [![circle][circle-image]][circle-url]
+
+[npm-image]: https://img.shields.io/npm/v/five-bells-visualization.svg?style=flat
+[npm-url]: https://npmjs.org/package/five-bells-visualization
+[circle-image]: https://circleci.com/gh/interledger/five-bells-visualization?style=shield
+[circle-url]: https://circleci.com/gh/interledger/five-bells-visualization
 
 > A simple visualization for Interledger payments
 
