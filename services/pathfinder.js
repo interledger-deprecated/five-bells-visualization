@@ -1,6 +1,6 @@
 'use strict'
 
-const pathfind = require('@ripple/five-bells-pathfind')
+const pathfind = require('five-bells-pathfind')
 const Pathfinder = pathfind.Pathfinder
 const Subscriber = require('../lib/subscriber')
 const config = require('./config')
