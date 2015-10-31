@@ -1,7 +1,7 @@
 {
-  "name": "@ripple/five-bells-visualization",
+  "name": "five-bells-visualization",
   "version": "1.4.1",
-  "description": "Tool to visualize Five Bells logs.",
+  "description": "Tool to visualize Five Bells payments",
   "main": "app.js",
   "scripts": {
     "install": "bower install --allow-root",
@@ -11,26 +11,27 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/ripple/five-bells-visualization.git"
+    "url": "git://github.com/interledger/five-bells-visualization.git"
   },
   "keywords": [
+    "interledger",
+    "five-bells",
     "visualization",
     "realtime",
     "log",
     "d3",
-    "d3js",
-    "five-bells"
+    "d3js"
   ],
   "author": "Ripple <info@ripple.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ripple/five-bells-visualization/issues"
+    "url": "https://github.com/interledger/five-bells-visualization/issues"
   },
-  "homepage": "https://github.com/ripple/five-bells-visualization",
+  "homepage": "https://github.com/interledger/five-bells-visualization",
   "dependencies": {
-    "@ripple/five-bells-pathfind": "~3.1.0",
-    "@ripple/five-bells-sender": "~2.0.2",
-    "@ripple/five-bells-shared": "~7.0.0",
+    "five-bells-pathfind": "~4.0.0",
+    "five-bells-sender": "~3.0.0",
+    "five-bells-shared": "~8.0.1",
     "byline": "^4.2.1",
     "co": "^4.6.0",
     "co-defer": "^1.0.0",

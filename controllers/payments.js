@@ -1,7 +1,7 @@
 'use strict'
 
 const log = require('../services/log')('payments')
-const sender = require('@ripple/five-bells-sender')
+const sender = require('five-bells-sender')
 
 exports.put = function * () {
   const body = this.request.body
