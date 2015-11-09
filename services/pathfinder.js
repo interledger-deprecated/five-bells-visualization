@@ -21,10 +21,11 @@ const pathfinder = new Pathfinder(config)
 })
 
 /* eslint-disable no-new */
-new Subscriber(
-  config.server.base_uri,
-  pathfinder.crawler,
-  log)
+new Subscriber(config.server.base_uri, {
+  crawler: pathfinder.crawler,
+  log: log,
+  config: config
+})
 /* eslint-enable no-new */
 
 module.exports = pathfinder

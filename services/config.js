@@ -29,6 +29,14 @@ config.server.port = process.env.PORT || 3000
 config.server.public_host = process.env.HOSTNAME || require('os').hostname()
 config.server.public_port = process.env.PUBLIC_PORT || config.server.port
 
+config.admin = {
+  user: process.env.ADMIN_USER,
+  pass: process.env.ADMIN_PASS
+}
+if (!config.admin.user || !config.admin.pass) {
+  throw new Error('Missing required configs: ADMIN_{USER,PASS}')
+}
+
 if (process.env.NODE_ENV === 'test') {
   config.crawler.initialLedgers.push('localhost:3001')
 }
