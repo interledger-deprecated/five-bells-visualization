@@ -1,7 +1,7 @@
 'use strict'
 
 const log = require('../services/log')('payments')
-const sender = require('five-bells-sender')
+const send = require('five-bells-sender').default
 
 exports.put = function * () {
   const body = this.request.body
@@ -14,6 +14,6 @@ exports.put = function * () {
     destination_amount: '1'
   }
   log.debug('put payment:', payment_args)
-  yield sender(payment_args)
+  yield send(payment_args)
   this.body = payment_args
 }
