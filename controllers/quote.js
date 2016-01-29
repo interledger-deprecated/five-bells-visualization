@@ -16,8 +16,11 @@ exports.get = function *() {
     throw new Error('not implemented')
   } else if (this.query.destination_amount) {
     log.debug('creating quote with fixed destination amount')
-    payments = yield pathfinder.findPath(source, destination,
-      this.query.destination_amount)
+    payments = yield pathfinder.findPath({
+      sourceLedger: source,
+      destinationLedger: destination,
+      destinationAmount: this.query.destination_amount
+    })
   } else {
     // XXX
     throw new Error()
