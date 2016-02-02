@@ -5,13 +5,12 @@ const send = require('five-bells-sender').default
 
 exports.put = function * () {
   const body = this.request.body
-  let payment_args = {
-    source_ledger: body.source_ledger,
-    source_username: body.source_username,
-    source_password: body.source_password,
-    destination_ledger: body.destination_ledger,
-    destination_username: body.destination_username,
-    destination_amount: '1'
+  const payment_args = {
+    sourceAccount: body.source_ledger + '/accounts/' + encodeURIComponent(body.source_username),
+    sourceUsername: body.source_username,
+    sourcePassword: body.source_password,
+    destinationAccount: body.destination_ledger + '/accounts/' + encodeURIComponent(body.destination_username),
+    destinationAmount: '1'
   }
   log.debug('put payment:', payment_args)
   yield send(payment_args)
