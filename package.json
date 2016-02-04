@@ -39,7 +39,7 @@
     "co-request": "^1.0.0",
     "co-stream": "^0.1.0",
     "five-bells-pathfind": "~4.2.0",
-    "five-bells-sender": "~4.0.0",
+    "five-bells-sender": "~4.1.0",
     "five-bells-shared": "~8.10.0",
     "koa": "^1.1.0",
     "koa-bodyparser": "^2.0.1",
