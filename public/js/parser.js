@@ -111,6 +111,7 @@ export default class Parser {
       }
       this.events.set(event.detail.resource.id, notification)
       this.state.current.events.add(notification)
+      console.log('Got notification about: ' + event.detail.resource.id, event)
     }
 
     let paymentEvents
