@@ -2,7 +2,7 @@
 
 [npm-image]: https://img.shields.io/npm/v/five-bells-visualization.svg?style=flat
 [npm-url]: https://npmjs.org/package/five-bells-visualization
-[circle-image]: https://circleci.com/gh/interledger/five-bells-visualization?style=shield
+[circle-image]: https://circleci.com/gh/interledger/five-bells-visualization/tree/master.svg?style=shield
 [circle-url]: https://circleci.com/gh/interledger/five-bells-visualization
 
 > A simple visualization for Interledger payments
