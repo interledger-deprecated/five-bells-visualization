@@ -12,8 +12,8 @@ class Analyzer {
     // Convert to adjacency list
     // TODO May be more efficient to rewrite the Tarjan's algorithm
     //      to expect a list in the format that we actually use.
-    const adjList = this.state.current.nodes.map(node => {
-      return (node.advisors || []).map(node => {
+    const adjList = this.state.current.nodes.map((node) => {
+      return (node.advisors || []).map((node) => {
         return this.state.current.nodes.indexOf(node)
       })
     })
@@ -22,7 +22,7 @@ class Analyzer {
       return a[a.length - 1] - b[b.length - 1]
     })
     scc.components.forEach((component, i) => {
-      component.forEach(nodeId => {
+      component.forEach((nodeId) => {
         const node = this.state.current.nodes[nodeId]
         node.color = Analyzer.colors[i % Analyzer.colors.length]
       })

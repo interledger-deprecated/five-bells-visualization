@@ -1,4 +1,3 @@
-import Ripple from 'js/ripple'
 import UI from 'js/ui'
 import State from 'js/state'
 import Visualization from 'js/visualization'
@@ -14,10 +13,7 @@ Polymer('five-bells-viz-graph', {
       events: new Set()
     })
 
-    const ripple = this.ripple = window.ripple = new Ripple()
-
     state.updater = function () {
-      return ripple.update(this.current)
     }
 
     // We need to create the analyzer before the visualization, so that things
@@ -62,6 +58,8 @@ Polymer('five-bells-viz-graph', {
     this.parser.parseEvent(event)
     this.viz.tick()
     if (event.type === 'notification') {
+      this.viz.updateEvents()
+      this.parser.clearFinalNotifications()
       this.viz.updateEvents()
     } else {
       this.viz.start()

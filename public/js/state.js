@@ -17,7 +17,7 @@ export default class State extends EventEmitter {
 
   prev (time) {
     return greatestLower(this.checkpoints,
-      m => m.time > time)
+      (m) => m.time > time)
   }
 
   runTimers (time) {
