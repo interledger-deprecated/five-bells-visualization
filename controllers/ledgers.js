@@ -2,6 +2,6 @@
 
 const pathfinder = require('../services/pathfinder')
 
-exports.list = function *() {
+exports.list = function * () {
   this.body = pathfinder.getLedgers()
 }

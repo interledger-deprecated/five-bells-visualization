@@ -125,10 +125,13 @@ export default class Parser {
 
     notification.text = event.detail.resource.state
     notification.state = event.detail.resource.state
+  }
 
-    if (event.detail.resource.state === 'executed' ||
-        event.detail.resource.state === 'rejected') {
-      this.state.current.events.delete(notification)
+  clearFinalNotifications () {
+    for (let e of this.state.current.events) {
+      if (e.state === 'executed' || e.state === 'rejected') {
+        this.state.current.events.delete(e)
+      }
     }
   }
 }

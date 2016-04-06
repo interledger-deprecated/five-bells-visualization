@@ -30,7 +30,7 @@ export default class Network {
     model.messages = keep
 
     // Handle messages to be delivered
-    deliver.forEach(message => {
+    deliver.forEach((message) => {
       this.handleMessage(model, message)
     })
 
@@ -59,7 +59,7 @@ export default class Network {
   }
 
   broadcastMessage (model, node, message) {
-    model.nodes.forEach(otherNode => {
+    model.nodes.forEach((otherNode) => {
       if (otherNode !== node) {
         const msg = _.cloneDeep(message)
         msg.source = node

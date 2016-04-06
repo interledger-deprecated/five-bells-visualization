@@ -3,6 +3,7 @@
 const app = require('koa')()
 const serve = require('koa-static')
 const route = require('koa-route')
+const path = require('path')
 const co = require('co')
 const defer = require('co-defer')
 const log = require('./services/log')
@@ -22,7 +23,7 @@ const bodyParser = require('koa-bodyparser')
 app.use(logger())
 app.use(errorHandler({log: log('error-handler')}))
 
-app.use(serve(__dirname + '/public'))
+app.use(serve(path.join(__dirname, 'public')))
 app.use(bodyParser())
 
 app.use(route.post('/notifications', notifications.post))
@@ -53,7 +54,7 @@ notifications.on('notification', function (notification) {
 // })
 
 if (!module.parent) {
-  co(function *() {
+  co(function * () {
     server.listen(config.server.port)
     log('app').info('visualizer listening on ' + config.server.bind_ip + ':' +
       config.server.port)

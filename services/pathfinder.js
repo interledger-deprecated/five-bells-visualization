@@ -12,7 +12,7 @@ pathfind.setLogger(log)
 const pathfinder = new Pathfinder(config)
 
 ;['ledger', 'trader', 'user'].forEach(function (type) {
-  pathfinder.crawler.on(type, function *(detail) {
+  pathfinder.crawler.on(type, function * (detail) {
     broker.emit({
       type: type,
       detail: detail

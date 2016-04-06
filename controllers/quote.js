@@ -3,7 +3,7 @@
 const log = require('../services/log')('quote')
 const pathfinder = require('../services/pathfinder')
 
-exports.get = function *() {
+exports.get = function * () {
   // TODO: Sanitize this.query
 
   let source = this.query.source_ledger
