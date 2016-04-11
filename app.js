@@ -16,6 +16,7 @@ const ledgers = require('./controllers/ledgers')
 const config = require('./services/config')
 const pathfinder = require('./services/pathfinder')
 const broker = require('./services/broker')
+const receiver = require('./services/receiver')
 const bodyParser = require('koa-bodyparser')
 // const crawler = require('./services/crawler')
 // const broker = require('./services/broker')
@@ -39,6 +40,8 @@ const io = require('socket.io')(server)
 broker.setBroadcaster(io)
 
 notifications.on('notification', function (notification) {
+  receiver.maybeFulfillCondition(notification.resource)
+
   // We don't need these to be persistent, so we bypass the broker
   io.emit('event', {
     type: 'notification',
