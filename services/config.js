@@ -1,6 +1,7 @@
 'use strict'
 
 const url = require('url')
+const crypto = require('crypto')
 
 const config = exports
 
@@ -50,3 +51,7 @@ config.server.base_uri = url.format({
   hostname: config.server.public_host,
   port: isCustomPort ? config.server.public_port : undefined
 })
+
+config.receiver = {}
+config.receiver.secret = process.env.VISUALIZATION_RECEIVER_SECRET ||
+  crypto.randomBytes(32).toString('base64')
