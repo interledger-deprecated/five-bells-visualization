@@ -8,7 +8,7 @@ exports.put = function * () {
   const body = this.request.body
   const receiverId = String(Math.floor(Math.random() * 0xffffffff))
   const condition = receiver.getConditionForLedger(body.destination_ledger, receiverId)
-  const payment_args = {
+  const paymentArgs = {
     sourceAccount: body.source_ledger + '/accounts/' + encodeURIComponent(body.source_username),
     sourcePassword: body.source_password,
     destinationAccount: body.destination_ledger + '/accounts/' + encodeURIComponent(body.destination_username),
@@ -16,7 +16,7 @@ exports.put = function * () {
     receiptCondition: condition.getConditionUri(),
     destinationMemo: { receiverId }
   }
-  log.debug('put payment:', payment_args)
-  yield send(payment_args)
-  this.body = payment_args
+  log.debug('put payment:', paymentArgs)
+  yield send(paymentArgs)
+  this.body = paymentArgs
 }
