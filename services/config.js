@@ -5,22 +5,9 @@ const crypto = require('crypto')
 
 const config = exports
 
-config.crawler = {}
-config.crawler.initialLedgers = []
-config.crawler.initialTraders = []
-if (process.env.CRAWLER_INITIAL_LEDGERS) {
-  process.env.CRAWLER_INITIAL_LEDGERS.split(';').forEach(function (uri) {
-    config.crawler.initialLedgers.push(uri)
-  })
-}
-if (process.env.CRAWLER_INITIAL_TRADERS) {
-  process.env.CRAWLER_INITIAL_TRADERS.split(';').forEach(function (uri) {
-    config.crawler.initialTraders.push(uri)
-  })
-}
-config.crawler.recrawlInterval = 60000
-if (process.env.VISUALIZATION_RECRAWL_INTERVAL) {
-  config.crawler.recrawlInterval = parseInt(process.env.VISUALIZATION_RECRAWL_INTERVAL, 10)
+config.ledgers = JSON.parse(process.env.VISUALIZATION_LEDGERS || '{}')
+if (typeof config.ledgers !== 'object' || !Object.keys(config.ledgers).length) {
+  throw new Error('Missing required config: VISUALIZATION_LEDGERS')
 }
 
 config.server = {}
@@ -36,10 +23,6 @@ config.admin = {
 }
 if (!config.admin.user || !config.admin.pass) {
   throw new Error('Missing required configs: ADMIN_{USER,PASS}')
-}
-
-if (process.env.NODE_ENV === 'test') {
-  config.crawler.initialLedgers.push('localhost:3001')
 }
 
 // Calculate base_uri

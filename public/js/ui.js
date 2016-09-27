@@ -19,7 +19,8 @@ export default class UI {
             source_username: 'alice',
             source_password: 'alice',
             destination_ledger: d.identity,
-            destination_username: 'bob'
+            destination_username: 'bob',
+            destination_password: 'bob'
           }
         })
         this.lastClicked = null

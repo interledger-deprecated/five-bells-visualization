@@ -1,4 +1,16 @@
 'use strict'
 const log = require('./log')
+const crawler = require('./crawler')
 const Broker = require('../lib/broker')
-module.exports = new Broker(log)
+const broker = new Broker(log)
+
+;['ledger', 'trader', 'user'].forEach(function (type) {
+  crawler.on(type, function * (detail) {
+    broker.emit({
+      type: type,
+      detail: detail
+    })
+  })
+})
+
+module.exports = broker
