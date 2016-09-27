@@ -30,8 +30,8 @@ export default class Parser {
       case 'ledger':
         this.parseLedgerEvent(event)
         break
-      case 'trader':
-        this.parseTraderEvent(event)
+      case 'connector':
+        this.parseConnectorEvent(event)
         break
       case 'user':
         // this.parseUserEvent(event)
@@ -61,7 +61,7 @@ export default class Parser {
     this.state.current.nodes.push(node)
   }
 
-  parseTraderEvent (event) {
+  parseConnectorEvent (event) {
     const nodeId = (event.detail.source < event.detail.destination)
       ? event.detail.source + ';' + event.detail.destination
       : event.detail.destination + ';' + event.detail.source
@@ -72,13 +72,13 @@ export default class Parser {
 
     const node = {
       id: unique++,
-      type: 'trader',
+      type: 'connector',
       identity: nodeId,
       source: event.detail.source,
       target: event.detail.destination
     }
     this.nodes.set(nodeId, node)
-    this.state.current.traders.push(node)
+    this.state.current.connectors.push(node)
   }
 
   parseUserEvent (event) {
