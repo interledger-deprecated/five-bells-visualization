@@ -4,7 +4,7 @@ const crawler = require('./crawler')
 const Broker = require('../lib/broker')
 const broker = new Broker(log)
 
-;['ledger', 'trader', 'user'].forEach(function (type) {
+;['ledger', 'connector', 'user'].forEach(function (type) {
   crawler.on(type, function * (detail) {
     broker.emit({
       type: type,

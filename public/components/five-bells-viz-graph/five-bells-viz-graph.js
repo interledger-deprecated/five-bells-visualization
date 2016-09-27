@@ -8,7 +8,7 @@ Polymer('five-bells-viz-graph', {
   ready: function () {
     const state = this.state = window.state = new State({
       nodes: [],
-      traders: [],
+      connectors: [],
       messages: [],
       events: new Set()
     })

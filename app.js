@@ -5,8 +5,6 @@ const serve = require('koa-static')
 const route = require('koa-route')
 const path = require('path')
 const co = require('co')
-const ilp = require('ilp')
-const FiveBellsLedger = require('ilp-plugin-bells')
 const log = require('./services/log')
 const logger = require('koa-mag')
 const errorHandler = require('five-bells-shared/middlewares/error-handler')
@@ -16,6 +14,7 @@ const broker = require('./services/broker')
 const bodyParser = require('koa-bodyparser')
 const crawler = require('./services/crawler')
 const subscriber = require('./services/subscriber')
+const receivers = require('./services/receivers')
 
 app.use(logger())
 app.use(errorHandler({log: log('error-handler')}))
@@ -45,13 +44,8 @@ if (!module.parent) {
       config.server.port)
     log('app').info('public at ' + config.server.base_uri)
 
-    for (const ledgerPrefix in config.ledgers) {
-      const receiver = ilp.createReceiver({
-        _plugin: FiveBellsLedger,
-        account: config.ledgers[ledgerPrefix] + '/accounts/bob',
-        password: 'bob'
-      })
-      yield receiver.listen()
+    for (const ledgerHost in receivers) {
+      yield receivers[ledgerHost].listen()
     }
 
     // Crawl the graph of ledgers and connectors

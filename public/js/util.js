@@ -53,7 +53,7 @@ export function interconnectFully (nodes) {
  *
  *     [ { source: <nodes[0]>, target: <nodes[1]> }]
  */
-export function generateLinks (nodes, traders) {
+export function generateLinks (nodes, connectors) {
   const links = []
 
   // For all combinations of nodes
@@ -74,7 +74,7 @@ export function generateLinks (nodes, traders) {
     }
   }
 
-  for (let node of traders) {
+  for (let node of connectors) {
     let source, target
     for (source of nodes) {
       if (source.identity === node.source) {
@@ -91,7 +91,7 @@ export function generateLinks (nodes, traders) {
     source.radius = 20 + Math.log(source.count + 1) * 36
     target.radius = 20 + Math.log(target.count + 1) * 36
     links.push({
-      type: 'trader',
+      type: 'connector',
       source: source,
       target: target
     })
