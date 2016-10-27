@@ -49,7 +49,7 @@ if (!module.parent) {
     }
 
     // Crawl the graph of ledgers and connectors
-    yield crawler.crawl(config.ledgers)
+    yield crawler.crawl(config.ledgers, config.connectors)
   }).catch(function (err) {
     console.error(typeof err === 'object' && err.stack ? err.stack : err)
   })
