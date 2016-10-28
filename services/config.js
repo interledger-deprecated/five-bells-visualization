@@ -10,6 +10,11 @@ if (typeof config.ledgers !== 'object' || !Object.keys(config.ledgers).length) {
   throw new Error('Missing required config: VISUALIZATION_LEDGERS')
 }
 
+config.connectors = JSON.parse(process.env.VISUALIZATION_CONNECTORS || '{}')
+if (typeof config.connectors !== 'object' || !Object.keys(config.connectors).length) {
+  throw new Error('Missing required config: VISUALIZATION_CONNECTORS')
+}
+
 config.server = {}
 config.server.secure = false
 config.server.bind_ip = process.env.BIND_IP || '0.0.0.0'
