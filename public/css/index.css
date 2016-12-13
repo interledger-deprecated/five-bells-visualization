@@ -3,3 +3,15 @@ body {
   overflow: hidden;
   font-family: 'Open Sans', sans-serif;
 }
+
+.help {
+  background: rgba(0, 0, 0, 0.8);
+  bottom: 0px;
+  color: white;
+  font-size: 12px;
+  margin: 0px 15px;
+  padding: 10px 20px;
+  position: fixed;
+  right: 0px;
+  width: 205px;
+}

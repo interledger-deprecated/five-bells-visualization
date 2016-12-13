@@ -232,6 +232,11 @@ export default class Visualization extends EventEmitter {
   handleNodeClick (d) {
     if (d3.event.defaultPrevented) return
     this.emit('nodeClick', d)
+    this.node
+      .style('stroke', (d) =>
+        d.destinationLedger ? '#7ecc72' : d.sourceLedger ? '#ff0c3e' : 'none')
+      .style('stroke-width', (d) =>
+        (d.sourceLedger || d.destinationLedger) ? '10' : '0')
   }
   handleNodeDblClick (d) {
     d3.select(this).classed('fixed', d.fixed = false)

@@ -11,6 +11,8 @@ export default class UI {
       if (d.type !== 'ledger') return
       if (this.lastClicked) {
         console.log('payment from ' + this.lastClicked.identity + ' to ' + d.identity)
+        d.destinationLedger = true
+        const lastClicked = this.lastClicked
         $.ajax({
           url: '/payments',
           method: 'PUT',
@@ -21,11 +23,16 @@ export default class UI {
             destination_ledger: d.identity,
             destination_username: 'bob',
             destination_password: 'bob'
+          },
+          complete: () => {
+            lastClicked.sourceLedger = false
+            d.destinationLedger = false
           }
         })
         this.lastClicked = null
       } else {
         this.lastClicked = d
+        this.lastClicked.sourceLedger = true
       }
     })
 
