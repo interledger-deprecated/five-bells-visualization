@@ -1,6 +1,6 @@
 {
   "name": "five-bells-visualization",
-  "version": "7.0.0",
+  "version": "7.1.0",
   "description": "Tool to visualize Five Bells payments",
   "main": "app.js",
   "scripts": {
