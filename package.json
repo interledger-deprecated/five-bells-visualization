@@ -37,7 +37,7 @@
     "co-foreach": "^1.0.7",
     "co-request": "^1.0.0",
     "co-stream": "^0.1.0",
-    "five-bells-shared": "^21.0.1",
+    "five-bells-shared": "^22.0.1",
     "ilp": "~7.1.0",
     "ilp-plugin-bells": "^9.2.1",
     "koa": "^1.1.0",
